@@ -1,0 +1,10 @@
+{
+      "google.datacloud.enableTelemetry": false,
+      "google.datacloud.executeCellToolConsent": false,
+      "google.cloud.billingQuotaProject": "europe-west1",
+      "google.cloud.region": "europe-west1",
+      "google.datacloud.bigqueryRegion": "europe-west1",
+      "google.datacloud.composer.environment": "europe-west1",
+      "google.datacloud.composer.project": "europe-west1",
+      "google.datacloud.composer.region": "europe-west1"
+}
