@@ -1,46 +1,47 @@
 # Golden Paw Studios — YouTube channel setup
 
+Focus: Golden Paw Studios (goldenpaw.dog/studios) and its services, with the Golden Paw game as one of the studio's products. Wording follows the Studios page.
+
 ## Identity (set in YouTube Studio → Customisation → Basic info)
 
 - **Name:** Golden Paw Studios
-- **Handle:** @goldenpawstudios
-- **Profile picture:** `profile-picture-800x800.png`
+- **Handle:** @goldenpawstudios (matches the TikTok handle)
+- **Profile picture:** `profile-picture-800x800.png` (the Studios paw on navy)
 - **Banner:** `banner-2560x1440.png`
 
-## Description (applied via API — 1,000 character limit)
+## Description (applied via API, 1,000 character limit)
 
 ```
-Welcome to Golden Paw Studios 🐾
+Golden Paw Studios 🐾 A small independent studio in the UK. We're dog lovers who make games, digital goodies and websites.
 
-Practical, friendly dog care for owners, groomers and dog walkers. We share simple routines and honest advice to help every dog live a happy, healthy life.
+💻 Services for small businesses
+• Small business websites, live in 72 hours
+• Website care plans: hosting, edits and uptime monitoring
+• Website speed & SEO audits
+• Custom Chrome extensions
+• Monthly social media packs
+Fixed prices, a free preview before you pay, and no jargon.
 
-On this channel:
-• Grooming tutorials, from brushing and bathing to nail trims
-• Daily care routines: feeding, exercise and health checks
-• Tips for starting and growing a grooming or dog-walking business
-• Printable planners and tools to keep your pup's care on track
+🛍 Digital goodies
+Wallpapers, printable planners, colouring books and custom pet portraits.
 
-New videos regularly. Subscribe and turn on notifications so you don't miss one.
+🎮 Our games
+Golden Paw: raise your own Shiba Inu in our virtual pet game (18+).
 
-🛍 Planners and starter kits: https://ludogx.gumroad.com
+🔗 Services & shop: https://goldenpaw.dog/studios
+🎮 Play: https://goldenpaw.dog
+📱 TikTok @goldenpawstudios · Instagram @goldenpawdoge
 
-Golden Paw Studios offers general guidance only. Always talk to your vet about your dog's health.
+Golden Paw is entertainment for adults (18+), not an investment.
 ```
 
-## Keywords (applied via API — 500 character limit)
+## Keywords (applied via API, 500 character limit)
 
 ```
-"Golden Paw Studios" "dog care" "dog grooming" "dog grooming at home" "puppy care" "dog care tips" "dog walker" "dog grooming business" "dog health" "dog training tips" "pet care" "dog owner tips" "dog care routine"
+"Golden Paw Studios" "Golden Paw" "small business website" "website design UK" "website care plan" "SEO audit" "Chrome extension" "social media for small business" "indie game studio" "virtual pet game" "Shiba Inu" "dog lovers" "custom pet portrait" "printables"
 ```
 
 ## Other settings (applied via API)
 
 - **Country:** United Kingdom
 - **Default language:** English
-
-## Homepage layout (once there are videos)
-
-1. Trailer for non-subscribers: a 30–60 second "Welcome to Golden Paw Studios" video
-2. Section: Recent uploads
-3. Section: Popular uploads
-4. Playlists: Grooming at home · Daily care · Dog care business
