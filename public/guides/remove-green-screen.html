@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Remove a Green-Screen Background Cleanly | AI Video Asset Creator</title>
+    <meta name="description" content="Get clean chroma-key cut-outs from video: choosing the key colour, tolerance, edge feathering, colour-only matching and spill suppression explained.">
+    <link rel="canonical" href="https://example.com/guides/remove-green-screen.html">
+    <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to Remove a Green-Screen Background Cleanly | AI Video Asset Creator">
+    <meta property="og:description" content="Get clean chroma-key cut-outs from video: choosing the key colour, tolerance, edge feathering, colour-only matching and spill suppression explained.">
+    <meta property="og:url" content="https://example.com/guides/remove-green-screen.html">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/assets/site.css">
+    <script src="/assets/site.js"></script>
+</head>
+<body class="content-page">
+    <nav class="site-nav" aria-label="Main">
+        <a class="brand" href="/"><img src="/assets/favicon.svg" alt="" width="26" height="26">AI Video Asset Creator</a>
+        <ul>
+            <li><a href="/">Tool</a></li>
+            <li><a href="/guides/">Guides</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a class="support-link" data-support hidden href="#" rel="noopener" target="_blank">☕ Support</a></li>
+            <li><button id="siteThemeToggle" type="button" aria-label="Toggle dark mode">🌙</button></li>
+        </ul>
+    </nav>
+    <main>
+        <article class="article">
+            <h1>Removing a green-screen background cleanly</h1>
+            <p class="lede">Chroma keying replaces one colour with transparency. It's simple in principle, but a few settings make the difference between a crisp sprite and one with a green halo.</p>
+
+            <h2>Sample the colour, don't guess it</h2>
+            <p>"Green" on camera is rarely <code>#00FF00</code>. Lighting, compression and the AI model all shift it. In the tool, click directly on the background in the live preview to sample its real colour. Sample a spot close to your subject, where the key matters most.</p>
+
+            <h2>Tolerance: how close counts as background</h2>
+            <p>Tolerance is the distance in colour space from your key colour that will be removed (0 to 442, the full RGB range). Start around 80 to 100 and adjust:</p>
+            <ul>
+                <li><strong>Background patches left behind?</strong> Raise tolerance.</li>
+                <li><strong>Holes appearing in your subject?</strong> Lower it. Your subject probably contains a similar colour.</li>
+            </ul>
+
+            <h2>Uneven lighting: match on colour only</h2>
+            <p>If the backdrop has shadows or hot spots, a single RGB tolerance can't cover both the dark and bright areas. Switch <em>Match on</em> to <strong>Colour only, ignore brightness</strong>. The tool then compares hue and saturation and ignores how light or dark a pixel is, so one tolerance keys the whole backdrop.</p>
+
+            <h2>Edge feathering: soft outlines</h2>
+            <p>A hard cut gives jagged, pixelated edges. Feathering fades pixels that are <em>nearly</em> background into partial transparency, producing smooth anti-aliased outlines. 10 to 20 suits most footage. Use 0 for pixel art, where you want hard edges.</p>
+
+            <h2>Spill suppression: killing the halo</h2>
+            <p>Green light bounces off the backdrop onto your subject's edges, hair and shiny surfaces. Even after keying, a green fringe remains. <em>Spill suppression</em> pulls the key colour back out of those edge pixels. Start around 60 and increase until the fringe goes, watching that skin tones and genuine greens on the subject stay natural.</p>
+
+            <h2>Choosing a key colour for AI-generated video</h2>
+            <ul>
+                <li>Use <strong>green</strong> for most subjects, or <strong>blue</strong> or <strong>magenta</strong> if your character wears green.</li>
+                <li>Prompt for a "flat, evenly lit solid background, no shadows".</li>
+                <li>Avoid white or black backgrounds if the subject has highlights or dark outlines, since those will key out too.</li>
+            </ul>
+
+            <h2>Check your result</h2>
+            <p>The preview sits on a checkerboard, so any leftover background or halo is easy to spot. Scrub through several frames, especially fast-moving ones, since motion blur mixes subject and background colours.</p>
+            <p><a class="cta" href="/">Try it on your clip →</a></p>
+        </article>
+        <div class="ad-slot" data-ad="content"></div>
+
+    </main>
+    <footer class="site-footer">
+        <div><a href="/about.html">About</a><a href="/guides/">Guides</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+        <div>© <span data-year>2026</span> AI Video Asset Creator. Processing happens on your device.</div>
+    </footer>
+</body>
+</html>

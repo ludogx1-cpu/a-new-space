@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Turn a Video into a Sprite Sheet (Free, In-Browser) | AI Video Asset Creator</title>
+    <meta name="description" content="Step-by-step guide to converting a video clip into a game sprite sheet with a JSON atlas: trimming, frame rate, background removal, trimming padding and sheet layout.">
+    <link rel="canonical" href="https://example.com/guides/video-to-sprite-sheet.html">
+    <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to Turn a Video into a Sprite Sheet (Free, In-Browser) | AI Video Asset Creator">
+    <meta property="og:description" content="Step-by-step guide to converting a video clip into a game sprite sheet with a JSON atlas: trimming, frame rate, background removal, trimming padding and sheet layout.">
+    <meta property="og:url" content="https://example.com/guides/video-to-sprite-sheet.html">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/assets/site.css">
+    <script src="/assets/site.js"></script>
+</head>
+<body class="content-page">
+    <nav class="site-nav" aria-label="Main">
+        <a class="brand" href="/"><img src="/assets/favicon.svg" alt="" width="26" height="26">AI Video Asset Creator</a>
+        <ul>
+            <li><a href="/">Tool</a></li>
+            <li><a href="/guides/">Guides</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a class="support-link" data-support hidden href="#" rel="noopener" target="_blank">☕ Support</a></li>
+            <li><button id="siteThemeToggle" type="button" aria-label="Toggle dark mode">🌙</button></li>
+        </ul>
+    </nav>
+    <main>
+        <article class="article">
+            <h1>How to turn a video into a sprite sheet</h1>
+            <p class="lede">A sprite sheet packs every frame of an animation into one image, so a game loads one texture instead of dozens. Here's how to get from a video clip to a sheet your engine can use, without installing anything.</p>
+
+            <h2>1. Start with a good clip</h2>
+            <p>The cleaner the source, the cleaner the sprite. Aim for:</p>
+            <ul>
+                <li><strong>A flat, even background</strong>, ideally pure green or a colour that does not appear on your subject. AI video generators respond well to prompts like "on a solid green background, studio lighting".</li>
+                <li><strong>A locked camera.</strong> Any camera movement ends up baked into every frame.</li>
+                <li><strong>One complete motion</strong>: a single walk cycle, attack or idle loop. Short clips (1 to 3 seconds) make manageable sheets.</li>
+            </ul>
+
+            <h2>2. Trim to the exact loop</h2>
+            <p>Load the video in the <a href="/">tool</a>, play it, and pause where the motion begins. Click <em>Set Start to current position</em>, then find the frame where the motion is about to repeat and click <em>Set End</em>. Setting the end one frame <em>before</em> the pose repeats avoids a visible stutter when the animation loops.</p>
+
+            <h2>3. Pick a capture frame rate</h2>
+            <p>Frame count is duration × FPS, and every frame adds to the sheet size. For most 2D games, <strong>8 to 12 fps</strong> looks deliberate and keeps sheets small. Smooth UI animations may want 24 fps. The estimate box shows frame count and approximate size before you commit.</p>
+
+            <h2>4. Remove the background</h2>
+            <p>Tick <em>Remove Background</em>, then click the backdrop in the live preview to sample its exact colour. Raise tolerance until the background disappears but your subject stays solid. Our <a href="/guides/remove-green-screen.html">green-screen guide</a> covers feathering and spill in detail.</p>
+
+            <h2>5. Trim transparent padding</h2>
+            <p>Most clips have a lot of empty space around the subject. <em>Trim transparent padding</em> crops every frame to one shared bounding box, which is often the biggest single size saving. Because all frames share the same box, the animation won't jitter, and the offsets are written into the JSON so the engine can place the sprite exactly.</p>
+
+            <h2>6. Choose the layout and format</h2>
+            <ul>
+                <li><strong>Columns:</strong> leave at <em>auto</em> for a roughly square sheet, or set 1 for a single horizontal strip if your engine expects that.</li>
+                <li><strong>WebP vs PNG:</strong> WebP is much smaller. PNG is lossless and every tool reads its transparency correctly. When in doubt, ship PNG.</li>
+                <li><strong>Power-of-two padding:</strong> only needed for older GPUs or specific mobile targets.</li>
+                <li><strong>Max texture size:</strong> many mobile GPUs cap textures at 4096×4096. If the sheet dimensions shown under the preview exceed that, lower the scale or FPS.</li>
+            </ul>
+
+            <h2>7. Export and iterate</h2>
+            <p>Click <em>Process File</em>. Scrub the preview to check individual frames, then download the sheet and the <code>.json</code> atlas. Want a smaller file? Use <em>Rebuild</em> to try different scale, quality and column settings instantly without decoding the video again.</p>
+
+            <h2>Next step</h2>
+            <p>Load your new sheet in an engine: see <a href="/guides/phaser-pixi-sprite-sheet.html">Phaser and PixiJS loading examples</a>.</p>
+            <p><a class="cta" href="/">Make a sprite sheet now →</a></p>
+        </article>
+        <div class="ad-slot" data-ad="content"></div>
+
+    </main>
+    <footer class="site-footer">
+        <div><a href="/about.html">About</a><a href="/guides/">Guides</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+        <div>© <span data-year>2026</span> AI Video Asset Creator. Processing happens on your device.</div>
+    </footer>
+</body>
+</html>
