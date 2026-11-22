@@ -99,3 +99,9 @@ Never click your own ads, and keep ads away from the Process/Download buttons.
 | Privacy / Terms | `public/privacy.html`, `public/terms.html` |
 | Domain + publisher ID find-and-replace | `scripts/configure.sh` |
 | Hosting config | `firebase.json`, `.firebaserc` |
+| How-to page / Get-the-app page | `public/how-to-use.html`, `public/get-the-app.html` |
+| Offline app (PWA) | `public/site.webmanifest`, `public/sw.js` |
+| Browser extension | `extension-src/`, built by `scripts/build-extension.py` → `dist/` |
+| Icons (redraw all sizes) | `scripts/make-icons.py` |
+
+Publishing the app and extension to stores: see **[APPS.md](APPS.md)**.

@@ -1,9 +1,75 @@
 {
+  "id": "/",
   "name": "Golden Paw Animation Creation Tool",
   "short_name": "GP Animate",
-  "start_url": "/",
+  "description": "Turn video into sprite sheets, GIFs and JSON atlases, then edit and preview them. Works offline; your files never leave your device.",
+  "start_url": "/?source=app",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f6f3ea",
-  "theme_color": "#C9A227",
-  "icons": [{ "src": "/assets/paw-logo-192.png", "sizes": "192x192", "type": "image/png" }]
+  "orientation": "any",
+  "background_color": "#0b1020",
+  "theme_color": "#c9a227",
+  "categories": [
+    "graphics",
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Video converter",
+      "url": "/?source=app-shortcut",
+      "icons": [
+        {
+          "src": "/assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Sprite editor",
+      "url": "/editor.html?source=app-shortcut",
+      "icons": [
+        {
+          "src": "/assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/editor.html",
+      "accept": {
+        "image/png": [
+          ".png"
+        ],
+        "image/webp": [
+          ".webp"
+        ],
+        "application/json": [
+          ".json"
+        ]
+      }
+    }
+  ]
 }

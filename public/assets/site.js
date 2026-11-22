@@ -31,7 +31,11 @@ window.SITE_CONFIG = {
 
 (function () {
     var cfg = window.SITE_CONFIG;
-    var hasAds = /^ca-pub-\d{16}$/.test(cfg.adsenseClient || '');
+    // Inside the browser extension: no remote scripts are allowed (and ads are not
+    // permitted in extension pages), so ads, analytics and the service worker are off.
+    var isExtension = /^(chrome|moz|safari-web)-extension:$/.test(location.protocol);
+    window.GP_IS_EXTENSION = isExtension;
+    var hasAds = !isExtension && /^ca-pub-\d{16}$/.test(cfg.adsenseClient || '');
 
     // Theme: share the tool's saved preference across every page.
     try {
@@ -63,7 +67,7 @@ window.SITE_CONFIG = {
     }
 
     // ---- Google Analytics 4 -------------------------------------------------
-    if (cfg.ga4) {
+    if (cfg.ga4 && !isExtension) {
         addScript('https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(cfg.ga4));
         gtag('js', new Date());
         gtag('config', cfg.ga4);
@@ -74,6 +78,22 @@ window.SITE_CONFIG = {
         addScript('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' +
             encodeURIComponent(cfg.adsenseClient), { crossorigin: 'anonymous' });
     }
+
+    // Installable app: offline support via the service worker (website only).
+    if (!isExtension && 'serviceWorker' in navigator && location.protocol === 'https:') {
+        window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); });
+    }
+
+    // "Install app" button: shown when the browser offers installation.
+    var deferredInstall = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault(); deferredInstall = e;
+        document.querySelectorAll('[data-install]').forEach(function (b) { b.hidden = false; });
+    });
+    window.addEventListener('appinstalled', function () {
+        deferredInstall = null;
+        document.querySelectorAll('[data-install]').forEach(function (b) { b.hidden = true; });
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
         // Ad slots: <div class="ad-slot" data-ad="top"></div>
@@ -103,6 +123,24 @@ window.SITE_CONFIG = {
             el.textContent = cfg.contactEmail;
         });
 
+        document.querySelectorAll('[data-install]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                if (!deferredInstall) { location.href = '/get-the-app.html'; return; }
+                deferredInstall.prompt();
+                deferredInstall.userChoice.finally(function () { deferredInstall = null; b.hidden = true; });
+            });
+        });
+
+        // Extension: pages that aren't bundled open on the website instead.
+        if (isExtension) {
+            var bundled = /^\/(index\.html|editor\.html|how-to-use\.html)?$/;
+            document.querySelectorAll('a[href^="/"]').forEach(function (a) {
+                var u = new URL(a.getAttribute('href'), 'https://animate.goldenpaw.dog');
+                if (!bundled.test(u.pathname)) { a.href = 'https://animate.goldenpaw.dog' + u.pathname + u.search + u.hash; a.target = '_blank'; a.rel = 'noopener'; }
+            });
+            document.querySelectorAll('[data-install]').forEach(function (b) { b.remove(); });
+        }
+
         // Footer year
         document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 
@@ -121,7 +159,7 @@ window.SITE_CONFIG = {
         }
 
         // Track successful exports as GA4 events (if analytics is on).
-        if (cfg.ga4) {
+        if (cfg.ga4 && !isExtension) {
             document.addEventListener('click', function (e) {
                 var a = e.target.closest && e.target.closest('a.download-btn');
                 if (a) gtag('event', 'file_download', { file_name: a.getAttribute('download') || '', kind: a.getAttribute('data-kind') || '' });

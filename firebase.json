@@ -2,17 +2,50 @@
   "hosting": {
     "public": "public",
     "cleanUrls": false,
-    "ignore": ["firebase.json", "**/.*"],
+    "ignore": [
+      "firebase.json",
+      "**/.DS_Store",
+      "**/Thumbs.db"
+    ],
     "headers": [
       {
+        "source": "/sw.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/site.webmanifest",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/manifest+json"
+          }
+        ]
+      },
+      {
         "source": "**/*.@(css|js|svg|png|webp)",
-        "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=86400"
+          }
+        ]
       },
       {
         "source": "**",
         "headers": [
-          { "key": "X-Content-Type-Options", "value": "nosniff" },
-          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
         ]
       }
     ]
