@@ -67,24 +67,12 @@ Short screen recordings of these (video in → Shiba sprite out) are also your b
 
 Golden Paw already has an approved AdSense account (`pub-2047805482197197`), and `https://goldenpaw.dog/ads.txt` already lists it. That covers `animate.goldenpaw.dog` too. The publisher ID is filled in, so ads appear once you either switch on **Auto ads** for goldenpaw.dog in AdSense, or create three display ad units and paste their slot IDs into `adSlots` in `public/assets/site.js`. The ad spaces stay hidden until then.
 
-### Policy notes (kept from the earlier review)
+### Policy notes
 
-Golden Paw is an 18+ game with Dogecoin rewards, and that matters for Google AdSense:
-
-- AdSense approves a **whole domain**. Applying for `animate.goldenpaw.dog` means Google reviews **goldenpaw.dog** too. A sign-in shell with crypto rewards and little readable text is at real risk of rejection ("low-value content", or a policy review of the crypto rewards).
-- `ads.txt` must be served from the **root domain**, at `https://goldenpaw.dog/ads.txt`, not the subdomain. That means adding the file (included here at `public/ads.txt`) to the Golden Paw app's public folder.
-- If the game rewards players for actions inside pages that show ads, that can count as incentivised traffic, which AdSense prohibits. Keep ads off the game itself.
-
-**Options:**
-
-1. **No ads on the tool (simplest):** treat it as free marketing for Golden Paw. Every visitor sees the Shiba showcase and the links to the game. Leave the AdSense ID as the placeholder and the ad slots stay hidden automatically.
-2. **Tip jar / sponsors:** put a Ko-fi or Stripe Payment Link in `supportUrl` in `site.js`.
-3. **AdSense anyway:** apply for goldenpaw.dog, add `ads.txt` at the root, then run
-   ```bash
-   ./scripts/configure.sh https://animate.goldenpaw.dog ca-pub-YOUR16DIGITS
-   ```
-   After approval, turn on **Privacy & messaging → European regulations** (required for EU/UK visitors), create three display ad units, and paste their slot IDs into `adSlots` in `site.js`.
-4. **Separate domain for ads:** run the tool on its own domain (as originally planned) with "by Golden Paw" branding, so AdSense review doesn't depend on the game.
+- **Consent (EU/UK):** make sure **Privacy & messaging → European regulations** is switched on in AdSense. The tool already sends Google Consent Mode v2 defaults.
+- **Add the site:** in AdSense under **Sites**, check that goldenpaw.dog is listed. Subdomains are covered by the root domain.
+- **No incentivised clicks:** AdSense bans rewarding people for viewing or clicking ads. Keep AdSense ads away from anything that pays out Dogecoin or game rewards. The tool itself has no rewards, so it's a clean place for ads.
+- **Alternatives or extras:** add a tip jar (Ko-fi or Stripe Payment Link) in `supportUrl` in `site.js`.
 
 Never click your own ads, and keep ads away from the Process/Download buttons.
 
