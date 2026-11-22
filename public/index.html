@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Video to Sprite Sheet, GIF &amp; Frame Converter | Video to Spritesheet</title>
+    <title>Free Video to Sprite Sheet, GIF &amp; Frame Converter | Golden Paw Animation Creation Tool</title>
     <meta name="description" content="Turn any video clip into a sprite sheet, animated GIF, or ZIP of frames with a TexturePacker JSON atlas. Remove green-screen backgrounds, trim, loop and export. Free, runs entirely in your browser, no uploads.">
-    <link rel="canonical" href="https://example.com/">
+    <link rel="canonical" href="https://animate.goldenpaw.dog/">
     <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
-    <meta name="theme-color" content="#0056b3">
+    <meta name="theme-color" content="#C9A227">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Video to Spritesheet">
+    <meta property="og:site_name" content="Golden Paw Animation Creation Tool">
     <meta property="og:title" content="Free Video to Sprite Sheet &amp; GIF Converter">
     <meta property="og:description" content="Video clip in, game-ready sprite sheet, GIF and JSON atlas out. Chroma key, trim, loop. 100% in your browser.">
-    <meta property="og:url" content="https://example.com/">
-    <meta property="og:image" content="https://example.com/assets/og-image.png">
+    <meta property="og:url" content="https://animate.goldenpaw.dog/">
+    <meta property="og:image" content="https://animate.goldenpaw.dog/assets/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/assets/paw-logo-192.png" type="image/png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="/assets/site.css">
     <script src="/assets/site.js"></script>
+    <script src="/assets/showcase.js" defer></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "Video to Spritesheet",
-      "url": "https://example.com/",
+      "name": "Golden Paw Animation Creation Tool",
+      "url": "https://animate.goldenpaw.dog/",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any (web browser)",
       "browserRequirements": "Requires a modern browser with JavaScript",
@@ -41,16 +42,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js" integrity="sha512-nNOFtIS+H0lwgdUDaPn/g1ssw3uN9AkEM7zy2wLaTQeLQNeNiitUcLpEpDIh3Z4T22MdeTNru/SQbNM4ig2rng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         :root {
-            --bg: #f0f2f5;
+            --bg: #f6f3ea;
             --panel: #ffffff;
-            --text: #333333;
-            --muted: #555555;
-            --border: #dddddd;
-            --border-soft: #eeeeee;
-            --accent: #0056b3;
-            --accent-hover: #004085;
-            --accent-soft: #e9ecef;
-            --accent-softer: #f8f9fa;
+            --text: #2e2a22;
+            --muted: #5c564a;
+            --border: #e0d8c4;
+            --border-soft: #efe9d8;
+            --accent: #7a5c00;
+            --accent-hover: #5e4700;
+            --accent-soft: #efe9d8;
+            --accent-softer: #faf7ef;
             --success: #1e7e34;
             --success-hover: #155724;
             --danger: #dc3545;
@@ -61,7 +62,8 @@
             --input-bg: #ffffff;
             --terminal-bg: #222222;
             --terminal-text: #0f0;
-            --drop-overlay: rgba(0, 86, 179, 0.15);
+            --drop-overlay: rgba(201, 162, 39, 0.18);
+            --on-accent: #ffffff;
         }
         [data-theme="dark"] {
             --bg: #14171c;
@@ -70,8 +72,8 @@
             --muted: #a8adb5;
             --border: #3a3f47;
             --border-soft: #2a2f36;
-            --accent: #4c9aff;
-            --accent-hover: #6badff;
+            --accent: #c9a227;
+            --accent-hover: #d9b440;
             --accent-soft: #2a2f36;
             --accent-softer: #23272e;
             --success: #2fbf5f;
@@ -82,7 +84,8 @@
             --secondary-hover: #7d868f;
             --shadow: rgba(0,0,0,0.5);
             --input-bg: #2a2f36;
-            --drop-overlay: rgba(76, 154, 255, 0.2);
+            --drop-overlay: rgba(201, 162, 39, 0.2);
+            --on-accent: #1a1400;
         }
         body { font-family: system-ui, sans-serif; padding: 20px; max-width: 850px; margin: auto; background: var(--bg); color: var(--text); transition: background 0.2s, color 0.2s; }
         h2 { text-align: center; margin-top: 0; }
@@ -128,6 +131,10 @@
         button { cursor: pointer; background: var(--accent); color: white; border: none; border-radius: 4px; padding: 10px 20px; font-weight: bold; font-size: 1em; transition: 0.2s; }
         button:hover { background: var(--accent-hover); }
         button:disabled { background: #ccc; cursor: not-allowed; color: #444; }
+        /* Accent-coloured buttons use --on-accent (dark text on gold in dark mode); coloured ones keep white. */
+        button { color: var(--on-accent); }
+        #generateBtn, #cancelBtn, #pickColorBtn, .transform-row button, .time-shortcuts button, button.editor-handoff { color: #fff; }
+        .transform-row button.active { color: var(--on-accent); }
 
         #pickColorBtn { background: var(--secondary); font-size: 0.9em; padding: 6px 12px; margin-left: 10px; }
         #pickColorBtn:hover { background: var(--secondary-hover); }
@@ -192,12 +199,13 @@
 </head>
 <body>
     <nav class="site-nav" aria-label="Main">
-        <a class="brand" href="/"><img src="/assets/favicon.svg" alt="" width="26" height="26">Video to Spritesheet</a>
+        <a class="brand" href="/"><img src="/assets/paw-logo-192.png" alt="" width="30" height="30"><span>Golden Paw<small>Animation Creation Tool</small></span></a>
         <ul>
             <li><a href="/" aria-current="page">Converter</a></li>
             <li><a href="/editor.html">Sprite Editor</a></li>
             <li><a href="/guides/">Guides</a></li>
             <li><a href="/about.html">About</a></li>
+            <li><a href="https://goldenpaw.dog/" rel="noopener">🐾 Golden Paw</a></li>
             <li><a class="support-link" data-support hidden href="#" rel="noopener" target="_blank">☕ Support</a></li>
         </ul>
     </nav>
@@ -206,6 +214,12 @@
         <button id="themeToggle" title="Toggle dark mode">🌙 Dark</button>
     </div>
     <p class="hero-tagline">Free, private and fast: your files never leave your device.</p>
+
+    <section class="showcase" id="showcase" hidden aria-labelledby="showcase-h">
+        <h2 id="showcase-h">🐾 Made with this tool: the Golden Paw Shiba</h2>
+        <p>Every animation of our <a href="https://goldenpaw.dog/" rel="noopener">Golden Paw</a> Shiba was turned from video into game-ready sprite sheets right here.</p>
+        <div class="showcase-grid"></div>
+    </section>
 
     <details class="panel" style="padding: 15px 25px;">
         <summary style="cursor: pointer; font-weight: bold; color: var(--accent); font-size: 1.05em;">📖 How to use (click to expand)</summary>
@@ -455,7 +469,7 @@
 
     <section class="seo-content" aria-labelledby="what-is">
         <h2 id="what-is">Turn video clips into game-ready sprite sheets</h2>
-        <p>Video to Spritesheet converts a short video, such as footage you generated with an AI video model, recorded, or rendered, into the assets a game or website actually needs: a packed <strong>sprite sheet</strong>, a <strong>ZIP of individual frames</strong>, an <strong>animated GIF</strong>, and a <strong>TexturePacker-compatible JSON atlas</strong> that Phaser, PixiJS, Godot importers and many other engines read directly.</p>
+        <p>Golden Paw Animation Creation Tool converts a short video, such as footage you generated with an AI video model, recorded, or rendered, into the assets a game or website actually needs: a packed <strong>sprite sheet</strong>, a <strong>ZIP of individual frames</strong>, an <strong>animated GIF</strong>, and a <strong>TexturePacker-compatible JSON atlas</strong> that Phaser, PixiJS, Godot importers and many other engines read directly.</p>
         <p>Everything happens locally in your browser using the Canvas API. Nothing is uploaded to a server, so it works with unreleased or confidential footage, and it is fast even for long clips.</p>
 
         <div class="feature-grid">
@@ -491,7 +505,7 @@
 
     <footer class="site-footer">
         <div><a href="/">Converter</a><a href="/editor.html">Sprite Editor</a><a href="/guides/">Guides</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
-        <div>© <span data-year>2026</span> Video to Spritesheet. Processing happens on your device.</div>
+        <div>© <span data-year>2026</span> Golden Paw. The Animation Creation Tool processes everything on your device. Part of <a href="https://goldenpaw.dog/" rel="noopener">goldenpaw.dog</a>.</div>
     </footer>
 
     <script>
@@ -1587,7 +1601,7 @@
             return {
                 frames: framesHash,
                 meta: {
-                    app: 'Video to Spritesheet',
+                    app: 'Golden Paw Animation Creation Tool',
                     image: spriteInfo ? `spritesheet.${ext}` : null,
                     format: 'RGBA8888',
                     size: { w: spriteInfo ? spriteInfo.sheetW : cols * fw, h: spriteInfo ? spriteInfo.sheetH : rows * fh },

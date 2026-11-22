@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Sprite Sheet Editor &amp; Animation Player | Video to Spritesheet</title>
+    <title>Free Sprite Sheet Editor &amp; Animation Player | Golden Paw Animation Creation Tool</title>
     <meta name="description" content="Open any sprite sheet (with or without a JSON atlas), preview the animation, delete, reorder and duplicate frames, then export a new sheet and TexturePacker JSON. Free and private: runs in your browser.">
-    <link rel="canonical" href="https://example.com/editor.html">
+    <link rel="canonical" href="https://animate.goldenpaw.dog/editor.html">
     <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
-    <meta name="theme-color" content="#0056b3">
+    <meta name="theme-color" content="#C9A227">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Video to Spritesheet">
+    <meta property="og:site_name" content="Golden Paw Animation Creation Tool">
     <meta property="og:title" content="Free Sprite Sheet Editor &amp; Animation Player">
     <meta property="og:description" content="Preview, trim, reorder and re-export sprite sheets with a JSON atlas, right in your browser.">
-    <meta property="og:url" content="https://example.com/editor.html">
-    <meta property="og:image" content="https://example.com/assets/og-image.png">
+    <meta property="og:url" content="https://animate.goldenpaw.dog/editor.html">
+    <meta property="og:image" content="https://animate.goldenpaw.dog/assets/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/assets/paw-logo-192.png" type="image/png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="/assets/site.css">
     <script src="/assets/site.js"></script>
@@ -24,7 +24,7 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Sprite Sheet Editor & Player",
-      "url": "https://example.com/editor.html",
+      "url": "https://animate.goldenpaw.dog/editor.html",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any (web browser)",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -41,8 +41,9 @@
         input[type="text"] { padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--panel); color: var(--text); width: 180px; }
         input[type="file"] { padding: 6px; border: 1px solid var(--border); border-radius: 4px; width: 100%; box-sizing: border-box; background: var(--panel); color: var(--text); }
         select { padding: 6px; border: 1px solid var(--border); border-radius: 4px; background: var(--panel); color: var(--text); }
-        .btn { cursor: pointer; background: var(--accent); color: #fff; border: none; border-radius: 4px; padding: 8px 14px; font-weight: 600; font-size: 0.92em; }
+        .btn { cursor: pointer; background: var(--accent); color: var(--on-accent); border: none; border-radius: 4px; padding: 8px 14px; font-weight: 600; font-size: 0.92em; }
         .btn:hover { background: var(--accent-hover); }
+        .btn.secondary, .btn.danger, .btn.success, #exportSelectedBtn { color: #fff; }
         .btn:disabled { background: #999; cursor: not-allowed; opacity: 0.6; }
         .btn.secondary { background: #5a6268; } .btn.secondary:hover { background: #4e555b; }
         .btn.danger { background: #dc3545; } .btn.danger:hover { background: #c82333; }
@@ -52,7 +53,7 @@
         .file-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         @media (max-width: 600px) { .file-grid { grid-template-columns: 1fr; } }
         #dropZone { position: relative; }
-        #dropZone.dragging::after { content: "Drop sheet image and/or JSON"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,86,179,0.15); border: 3px dashed var(--accent); border-radius: 8px; font-weight: 700; font-size: 1.2em; color: var(--accent); pointer-events: none; }
+        #dropZone.dragging::after { content: "Drop sheet image and/or JSON"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(201,162,39,0.18); border: 3px dashed var(--accent); border-radius: 8px; font-weight: 700; font-size: 1.2em; color: var(--accent); pointer-events: none; }
         #info { margin-top: 10px; font-size: 0.9em; color: var(--muted); }
         #info.warn { color: #dc3545; }
 
@@ -84,12 +85,13 @@
 </head>
 <body class="content-page">
     <nav class="site-nav" aria-label="Main">
-        <a class="brand" href="/"><img src="/assets/favicon.svg" alt="" width="26" height="26">Video to Spritesheet</a>
+        <a class="brand" href="/"><img src="/assets/paw-logo-192.png" alt="" width="30" height="30"><span>Golden Paw<small>Animation Creation Tool</small></span></a>
         <ul>
             <li><a href="/">Converter</a></li>
             <li><a href="/editor.html" aria-current="page">Sprite Editor</a></li>
             <li><a href="/guides/">Guides</a></li>
             <li><a href="/about.html">About</a></li>
+            <li><a href="https://goldenpaw.dog/" rel="noopener">🐾 Golden Paw</a></li>
             <li><a class="support-link" data-support hidden href="#" rel="noopener" target="_blank">☕ Support</a></li>
             <li><button id="siteThemeToggle" type="button" aria-label="Toggle dark mode">🌙</button></li>
         </ul>
@@ -213,7 +215,7 @@
 
     <footer class="site-footer">
         <div><a href="/">Converter</a><a href="/editor.html">Sprite Editor</a><a href="/guides/">Guides</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
-        <div>© <span data-year>2026</span> Video to Spritesheet. Processing happens on your device.</div>
+        <div>© <span data-year>2026</span> Golden Paw. The Animation Creation Tool processes everything on your device. Part of <a href="https://goldenpaw.dog/" rel="noopener">goldenpaw.dog</a>.</div>
     </footer>
 
 <script>
@@ -629,7 +631,7 @@
         const json = {
             frames: {},
             meta: {
-                app: 'Video to Spritesheet — Sprite Editor',
+                app: 'Golden Paw Animation Creation Tool: Sprite Editor',
                 image: `${name}.${ext}`,
                 format: 'RGBA8888',
                 size: { w: sheet.width, h: sheet.height },
@@ -661,6 +663,22 @@
         if (!selected.size) return setInfo('Select frames to export first.', true);
         exportFrames(sel().map(i => frames[i]));
     });
+
+    // ---------- open a sheet by URL (used by the showcase) ----------
+    // Only same-site paths like /showcase/x.png are accepted.
+    (function () {
+        const q = new URLSearchParams(location.search);
+        const safe = v => v && /^\/(?!\/)[\w\-./%]+$/.test(v) ? v : null;
+        const sheet = safe(q.get('sheet')), atlas = safe(q.get('atlas'));
+        if (!sheet) return;
+        (async () => {
+            try {
+                loadedJson = atlas ? await (await fetch(atlas)).json() : null;
+                const blob = await (await fetch(sheet)).blob();
+                await setImageFile(blob, sheet.split('/').pop());
+            } catch (e) { setInfo('Could not open that sheet: ' + e.message, true); }
+        })();
+    })();
 
     // ---------- hand-off from the converter page ----------
     // The converter stores its latest sheet + JSON in IndexedDB and links here with ?from=converter.
