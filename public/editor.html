@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Sprite Sheet Editor &amp; Animation Player | Video to Spritesheet</title>
+    <meta name="description" content="Open any sprite sheet (with or without a JSON atlas), preview the animation, delete, reorder and duplicate frames, then export a new sheet and TexturePacker JSON. Free and private: runs in your browser.">
+    <link rel="canonical" href="https://example.com/editor.html">
+    <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+    <meta name="theme-color" content="#0056b3">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Video to Spritesheet">
+    <meta property="og:title" content="Free Sprite Sheet Editor &amp; Animation Player">
+    <meta property="og:description" content="Preview, trim, reorder and re-export sprite sheets with a JSON atlas, right in your browser.">
+    <meta property="og:url" content="https://example.com/editor.html">
+    <meta property="og:image" content="https://example.com/assets/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="/assets/site.css">
+    <script src="/assets/site.js"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Sprite Sheet Editor & Player",
+      "url": "https://example.com/editor.html",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (web browser)",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "Load a sprite sheet and JSON atlas, preview the animation, delete, reorder and duplicate frames, and export a new sheet with TexturePacker JSON."
+    }
+    </script>
+    <style>
+        .panel { background: var(--panel); padding: 22px 25px; border-radius: 8px; box-shadow: 0 2px 4px var(--shadow); margin-bottom: 20px; }
+        .panel h2 { color: var(--accent); font-size: 1.15em; margin: 0 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--border-soft); }
+        .desc { color: var(--muted); font-size: 0.88em; display: block; margin-top: 4px; line-height: 1.45; }
+        .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 10px; }
+        label.inline { font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+        input[type="number"] { width: 64px; padding: 6px; border: 1px solid var(--border); border-radius: 4px; background: var(--panel); color: var(--text); }
+        input[type="text"] { padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--panel); color: var(--text); width: 180px; }
+        input[type="file"] { padding: 6px; border: 1px solid var(--border); border-radius: 4px; width: 100%; box-sizing: border-box; background: var(--panel); color: var(--text); }
+        select { padding: 6px; border: 1px solid var(--border); border-radius: 4px; background: var(--panel); color: var(--text); }
+        .btn { cursor: pointer; background: var(--accent); color: #fff; border: none; border-radius: 4px; padding: 8px 14px; font-weight: 600; font-size: 0.92em; }
+        .btn:hover { background: var(--accent-hover); }
+        .btn:disabled { background: #999; cursor: not-allowed; opacity: 0.6; }
+        .btn.secondary { background: #5a6268; } .btn.secondary:hover { background: #4e555b; }
+        .btn.danger { background: #dc3545; } .btn.danger:hover { background: #c82333; }
+        .btn.success { background: var(--success); } .btn.success:hover { filter: brightness(0.92); }
+        .btn:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        .file-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media (max-width: 600px) { .file-grid { grid-template-columns: 1fr; } }
+        #dropZone { position: relative; }
+        #dropZone.dragging::after { content: "Drop sheet image and/or JSON"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,86,179,0.15); border: 3px dashed var(--accent); border-radius: 8px; font-weight: 700; font-size: 1.2em; color: var(--accent); pointer-events: none; }
+        #info { margin-top: 10px; font-size: 0.9em; color: var(--muted); }
+        #info.warn { color: #dc3545; }
+
+        .checker { background-color: #fff; background-image: linear-gradient(45deg,#ccc 25%,transparent 25%),linear-gradient(-45deg,#ccc 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#ccc 75%),linear-gradient(-45deg,transparent 75%,#ccc 75%); background-size: 16px 16px; background-position: 0 0,0 8px,8px -8px,-8px 0; }
+        [data-theme="dark"] .checker { background-color: #2a2f36; background-image: linear-gradient(45deg,#3a3f47 25%,transparent 25%),linear-gradient(-45deg,#3a3f47 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#3a3f47 75%),linear-gradient(-45deg,transparent 75%,#3a3f47 75%); }
+        .stage { margin-top: 14px; border: 1px solid var(--border); border-radius: 6px; overflow: auto; max-height: 520px; display: flex; justify-content: center; align-items: center; min-height: 160px; padding: 10px; }
+        #playerCanvas { display: block; }
+        #playerCanvas.pixelated, .frame-box.pixelated { image-rendering: pixelated; }
+        #frameCounter { font-family: monospace; color: var(--muted); min-width: 80px; }
+        #scrub { flex: 1; min-width: 120px; }
+
+        .toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        #selInfo { font-size: 0.88em; color: var(--muted); align-self: center; margin-left: 4px; }
+        #gallery { display: flex; flex-wrap: wrap; gap: 6px; max-height: 460px; overflow: auto; padding: 4px; border: 1px solid var(--border-soft); border-radius: 6px; min-height: 60px; }
+        #gallery:empty::before { content: "Frames appear here after you load a sheet."; color: var(--muted); font-style: italic; padding: 14px; }
+        .frame-wrap { position: relative; }
+        .frame-box { display: block; border: 2px solid var(--border); border-radius: 3px; cursor: pointer; transition: transform 0.08s, border-color 0.08s; }
+        .frame-box:hover { border-color: var(--accent); }
+        .frame-wrap.selected .frame-box { border-color: #e74c3c; box-shadow: 0 0 0 2px rgba(231,76,60,0.35); }
+        .frame-wrap.current .frame-box { outline: 2px solid var(--success); outline-offset: 1px; }
+        .frame-wrap.drag-over .frame-box { border-color: var(--success); transform: scale(1.06); }
+        .frame-num { position: absolute; left: 3px; top: 2px; font: 10px/1 monospace; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 3px; border-radius: 2px; pointer-events: none; }
+        #downloads { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        a.download-btn { display: block; padding: 12px; background: var(--success); color: #fff; text-decoration: none; border-radius: 4px; text-align: center; font-weight: 700; }
+        a.download-btn:hover { filter: brightness(0.92); }
+        .kbd { font: 0.85em monospace; border: 1px solid var(--border); border-radius: 3px; padding: 0 4px; }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    </style>
+</head>
+<body class="content-page">
+    <nav class="site-nav" aria-label="Main">
+        <a class="brand" href="/"><img src="/assets/favicon.svg" alt="" width="26" height="26">Video to Spritesheet</a>
+        <ul>
+            <li><a href="/">Converter</a></li>
+            <li><a href="/editor.html" aria-current="page">Sprite Editor</a></li>
+            <li><a href="/guides/">Guides</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a class="support-link" data-support hidden href="#" rel="noopener" target="_blank">☕ Support</a></li>
+            <li><button id="siteThemeToggle" type="button" aria-label="Toggle dark mode">🌙</button></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1 style="text-align:center;margin:0 0 6px;font-size:1.6em;">Sprite Sheet Editor &amp; Player</h1>
+        <p class="hero-tagline">Preview, clean up and re-export any sprite sheet. Files stay on your device.</p>
+
+        <div class="ad-slot" data-ad="top"></div>
+
+        <section class="panel" id="dropZone">
+            <h2>1. Load a sprite sheet</h2>
+            <div class="file-grid">
+                <div>
+                    <label class="inline" for="upload">Sheet image</label>
+                    <input type="file" id="upload" accept="image/*">
+                </div>
+                <div>
+                    <label class="inline" for="jsonUpload">JSON atlas <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+                    <input type="file" id="jsonUpload" accept=".json,application/json">
+                </div>
+            </div>
+            <span class="desc">Drag &amp; drop both files onto this panel. With a JSON atlas (TexturePacker JSON Hash or Array, as exported by our <a href="/">converter</a>, TexturePacker, Aseprite, Phaser…) frames are cut exactly, trim offsets included. Without one, slice by grid below.</span>
+
+            <div class="row">
+                <label class="inline">Grid: <input type="number" id="cols" value="4" min="1" title="Columns"> cols ×
+                <input type="number" id="rows" value="4" min="1" title="Rows"> rows</label>
+                <label class="inline">Skip empty cells <input type="checkbox" id="skipEmpty" checked></label>
+                <button class="btn secondary" id="extractBtn" type="button">Slice by grid</button>
+                <button class="btn secondary" id="reloadJsonBtn" type="button" hidden>Use JSON again</button>
+            </div>
+            <div id="info" role="status"></div>
+        </section>
+
+        <section class="panel">
+            <h2>2. Player</h2>
+            <div class="row" style="margin-top:0">
+                <button class="btn success" id="playBtn" type="button" disabled>▶ Play</button>
+                <button class="btn danger" id="stopBtn" type="button" disabled>■ Stop</button>
+                <button class="btn secondary" id="prevBtn" type="button" disabled title="Previous frame (←)">◀</button>
+                <button class="btn secondary" id="nextBtn" type="button" disabled title="Next frame (→)">▶</button>
+                <label class="inline">FPS <input type="number" id="fps" value="12" min="1" max="120"></label>
+                <label class="inline">Mode
+                    <select id="playMode">
+                        <option value="loop">Loop</option>
+                        <option value="pingpong">Ping-pong</option>
+                        <option value="once">Play once</option>
+                    </select>
+                </label>
+                <label class="inline">Zoom
+                    <select id="zoom">
+                        <option value="fit" selected>Fit</option>
+                        <option value="0.5">50%</option>
+                        <option value="1">100%</option>
+                        <option value="2">200%</option>
+                        <option value="4">400%</option>
+                        <option value="8">800%</option>
+                    </select>
+                </label>
+                <label class="inline">Pixel art <input type="checkbox" id="pixelated"></label>
+            </div>
+            <div class="row">
+                <input type="range" id="scrub" min="0" max="0" value="0" disabled aria-label="Scrub frames">
+                <span id="frameCounter">— / —</span>
+            </div>
+            <div class="stage checker" id="stage"><canvas id="playerCanvas" width="64" height="64"></canvas></div>
+            <span class="desc">Shortcuts: <span class="kbd">Space</span> play/pause · <span class="kbd">←</span>/<span class="kbd">→</span> step · <span class="kbd">Del</span> delete selected · <span class="kbd">Ctrl+A</span> select all · <span class="kbd">Ctrl+Z</span> undo</span>
+        </section>
+
+        <section class="panel">
+            <h2>3. Edit frames</h2>
+            <div class="toolbar">
+                <button class="btn secondary" data-act="all" type="button">Select all</button>
+                <button class="btn secondary" data-act="none" type="button">Clear</button>
+                <button class="btn secondary" data-act="invert" type="button">Invert</button>
+                <button class="btn secondary" data-act="earlier" type="button" title="Move selected frames one step earlier">← Move</button>
+                <button class="btn secondary" data-act="later" type="button" title="Move selected frames one step later">Move →</button>
+                <button class="btn secondary" data-act="duplicate" type="button">Duplicate</button>
+                <button class="btn secondary" data-act="reverse" type="button" title="Reverse the selected frames, or all frames if none are selected">Reverse</button>
+                <button class="btn danger" data-act="delete" type="button">Delete</button>
+                <button class="btn secondary" data-act="undo" type="button" id="undoBtn" disabled>↶ Undo</button>
+                <span id="selInfo"></span>
+            </div>
+            <div id="gallery"></div>
+            <span class="desc">Click to select, <strong>Shift-click</strong> for a range, <strong>Ctrl/⌘-click</strong> to toggle. Drag a frame to reorder. Double-click a frame to show it in the player.</span>
+        </section>
+
+        <section class="panel">
+            <h2>4. Export</h2>
+            <div class="row" style="margin-top:0">
+                <label class="inline">Columns <input type="number" id="expCols" value="8" min="1"></label>
+                <label class="inline">Format
+                    <select id="expFormat">
+                        <option value="image/png" selected>PNG (lossless)</option>
+                        <option value="image/webp">WebP (smaller)</option>
+                    </select>
+                </label>
+                <label class="inline">File name <input type="text" id="expName" value="spritesheet"></label>
+            </div>
+            <div class="row">
+                <button class="btn" id="exportBtn" type="button" disabled>Export all frames</button>
+                <button class="btn" id="exportSelectedBtn" type="button" disabled style="background:#7b4bb0">Export selected only</button>
+            </div>
+            <span class="desc">Exports a sheet image plus a TexturePacker JSON Hash atlas (works in Phaser, PixiJS and our converter's format). Frames are written at their full, untrimmed size so they line up exactly.</span>
+            <div id="downloads"></div>
+        </section>
+
+        <section class="seo-content">
+            <h2>What can the sprite sheet editor do?</h2>
+            <p>It's the clean-up step after you've made a sprite sheet. Load a sheet from our <a href="/">video converter</a> or anywhere else, watch it animate at any frame rate, and fix it: cut the frames where the loop stutters, drop blurry in-betweens, reorder or reverse a sequence, duplicate a held pose, or split one long sheet into separate animations by exporting just the frames you select.</p>
+            <div class="ad-slot" data-ad="content"></div>
+            <h2>Tips</h2>
+            <ul>
+                <li><strong>Finding a seamless loop:</strong> step through with the arrow keys and delete the frame that duplicates frame 1. That removes the hitch at the loop point.</li>
+                <li><strong>Splitting animations:</strong> select the idle frames, export them as <code>idle</code>, then select the run frames and export them as <code>run</code>.</li>
+                <li><strong>No JSON?</strong> Count the columns and rows in the sheet and use <em>Slice by grid</em>. <em>Skip empty cells</em> drops blank cells at the end of the last row.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div><a href="/">Converter</a><a href="/editor.html">Sprite Editor</a><a href="/guides/">Guides</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+        <div>© <span data-year>2026</span> Video to Spritesheet. Processing happens on your device.</div>
+    </footer>
+
+<script>
+(() => {
+    const $ = id => document.getElementById(id);
+    const playerCanvas = $('playerCanvas'), ctx = playerCanvas.getContext('2d');
+    const gallery = $('gallery'), info = $('info');
+
+    // Each frame is an offscreen canvas at the frame's full (untrimmed) size.
+    let frames = [];
+    let frameW = 64, frameH = 64;
+    let selected = new Set();
+    let anchor = null;          // for shift-click ranges
+    let current = 0, playing = false, rafId = 0, lastTick = 0, dir = 1;
+    let undoStack = [];
+    let loadedImage = null, loadedJson = null, loadedName = 'spritesheet';
+
+    // ---------- helpers ----------
+    function setInfo(msg, warn) { info.textContent = msg; info.classList.toggle('warn', !!warn); }
+
+    function readFileAsText(f) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsText(f); }); }
+    function loadImageFromBlob(blob) {
+        return new Promise((res, rej) => {
+            const url = URL.createObjectURL(blob);
+            const img = new Image();
+            img.onload = () => { URL.revokeObjectURL(url); res(img); };
+            img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('Could not read that image.')); };
+            img.src = url;
+        });
+    }
+    function newCanvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+    function isEmpty(c) {
+        const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+        for (let i = 3; i < d.length; i += 4) if (d[i] !== 0) return false;
+        return true;
+    }
+    function baseName(n) { return (n || 'spritesheet').replace(/\.[^.]+$/, '').replace(/[^\w\-]+/g, '_') || 'spritesheet'; }
+
+    // ---------- slicing ----------
+    // Accepts TexturePacker JSON Hash ({frames:{name:{...}}}) and JSON Array ({frames:[{filename,...}]}).
+    function sliceFromJson(img, data) {
+        let list;
+        if (Array.isArray(data.frames)) list = data.frames;
+        else if (data.frames && typeof data.frames === 'object') list = Object.keys(data.frames).map(k => ({ filename: k, ...data.frames[k] }));
+        else throw new Error('No "frames" found in this JSON.');
+        if (!list.length) throw new Error('The JSON lists no frames.');
+
+        // Natural sort so frame_2 comes before frame_10.
+        const coll = new Intl.Collator(undefined, { numeric: true });
+        if (!Array.isArray(data.frames)) list.sort((a, b) => coll.compare(a.filename, b.filename));
+
+        // Sanity check: a JSON from a different (e.g. rebuilt or rescaled) sheet won't fit.
+        const outOfBounds = list.some(f => f.frame && (f.frame.x + (f.rotated ? f.frame.h : f.frame.w) > img.width + 1 || f.frame.y + (f.rotated ? f.frame.w : f.frame.h) > img.height + 1));
+        if (outOfBounds) throw new Error(`This JSON describes a bigger sheet than the image (${img.width}×${img.height}). Was the sheet rebuilt or resized after the JSON was saved? Use "Slice by grid" instead.`);
+
+        const out = [];
+        let maxW = 0, maxH = 0;
+        for (const f of list) {
+            const src = f.sourceSize || { w: f.frame.w, h: f.frame.h };
+            maxW = Math.max(maxW, src.w); maxH = Math.max(maxH, src.h);
+        }
+        for (const f of list) {
+            const fr = f.frame, sss = f.spriteSourceSize || { x: 0, y: 0 };
+            const c = newCanvas(maxW, maxH), cx = c.getContext('2d');
+            if (f.rotated) {
+                // TexturePacker rotates 90° clockwise in the sheet; undo it.
+                cx.save();
+                cx.translate(sss.x, sss.y + fr.w);
+                cx.rotate(-Math.PI / 2);
+                cx.drawImage(img, fr.x, fr.y, fr.h, fr.w, 0, 0, fr.h, fr.w);
+                cx.restore();
+            } else {
+                cx.drawImage(img, fr.x, fr.y, fr.w, fr.h, sss.x, sss.y, fr.w, fr.h);
+            }
+            out.push(c);
+        }
+        const fps = data.fps || (data.meta && data.meta.fps) || (list[0].duration ? Math.round(1000 / list[0].duration) : null);
+        const tag = data.meta && Array.isArray(data.meta.frameTags) && data.meta.frameTags[0];
+        return { frames: out, w: maxW, h: maxH, fps, cols: data.cols, pingpong: tag && tag.direction === 'pingpong' };
+    }
+
+    function sliceFromGrid(img, cols, rows, skipEmpty) {
+        const fw = Math.floor(img.width / cols), fh = Math.floor(img.height / rows);
+        if (fw < 1 || fh < 1) throw new Error('Too many columns or rows for this image.');
+        const out = [];
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+            const cv = newCanvas(fw, fh);
+            cv.getContext('2d').drawImage(img, c * fw, r * fh, fw, fh, 0, 0, fw, fh);
+            out.push(cv);
+        }
+        // Only trailing blanks are dropped, so deliberate empty frames mid-animation survive.
+        if (skipEmpty) while (out.length > 1 && isEmpty(out[out.length - 1])) out.pop();
+        const uneven = img.width % cols || img.height % rows;
+        return { frames: out, w: fw, h: fh, uneven };
+    }
+
+    function applyFrames(result, sourceLabel) {
+        stop();
+        frames = result.frames; frameW = result.w; frameH = result.h;
+        selected.clear(); anchor = null; current = 0; undoStack = []; $('downloads').innerHTML = '';
+        if (result.fps) $('fps').value = result.fps;
+        if (result.pingpong) $('playMode').value = 'pingpong';
+        $('expCols').value = result.cols || Math.min(frames.length, Math.ceil(Math.sqrt(frames.length)));
+        playerCanvas.width = frameW; playerCanvas.height = frameH;
+        applyZoom();
+        let msg = `${sourceLabel} · ${frames.length} frames · ${frameW}×${frameH}px each`;
+        if (result.uneven) msg += ' · The image doesn\'t divide evenly by this grid, so edge pixels were dropped. Check the column/row counts.';
+        setInfo(msg, !!result.uneven);
+        refresh();
+    }
+
+    async function loadCurrent(preferJson = true) {
+        if (!loadedImage) return setInfo('Choose a sheet image first.', true);
+        try {
+            if (preferJson && loadedJson) {
+                const m = loadedJson.meta && loadedJson.meta.size;
+                const mismatch = m && (Math.abs(m.w - loadedImage.width) > 1 || Math.abs(m.h - loadedImage.height) > 1);
+                let res = null, err = null;
+                if (!mismatch) { try { res = sliceFromJson(loadedImage, loadedJson); } catch (e) { err = e; } }
+                if (res) return applyFrames(res, 'Sliced from JSON');
+                // The JSON was made for a different-sized sheet (e.g. rebuilt at another scale or
+                // column count). Fall back to inferring the grid from the frame aspect ratio.
+                const g = inferGrid(loadedImage, loadedJson);
+                if (!g) throw err || new Error(`This JSON was made for a ${m.w}×${m.h} sheet but the image is ${loadedImage.width}×${loadedImage.height}. Set the columns and rows and use "Slice by grid".`);
+                $('cols').value = g.cols; $('rows').value = g.rows;
+                const r = sliceFromGrid(loadedImage, g.cols, g.rows, true);
+                r.fps = loadedJson.fps || (loadedJson.meta && loadedJson.meta.fps);
+                applyFrames(r, `JSON didn't match this image size, so the grid was worked out as ${g.cols}×${g.rows}`);
+            } else {
+                applyFrames(sliceFromGrid(loadedImage, Math.max(1, +$('cols').value || 1), Math.max(1, +$('rows').value || 1), $('skipEmpty').checked), 'Sliced by grid');
+            }
+        } catch (e) { setInfo(e.message, true); }
+        $('reloadJsonBtn').hidden = !loadedJson;
+    }
+
+    async function setImageFile(blob, name) {
+        try {
+            loadedImage = await loadImageFromBlob(blob);
+            loadedName = baseName(name);
+            $('expName').value = loadedName;
+            if (!loadedJson) guessGrid();
+            await loadCurrent(true);
+        } catch (e) { setInfo(e.message, true); }
+    }
+    async function setJsonText(text) {
+        try { loadedJson = JSON.parse(text); }
+        catch (e) { loadedJson = null; return setInfo('That JSON file could not be parsed: ' + e.message, true); }
+        if (loadedImage) await loadCurrent(true);
+        else setInfo('JSON loaded. Now choose the sheet image.');
+    }
+
+    // Find a cols×rows grid whose cells divide the image exactly and match the JSON's frame
+    // aspect ratio, preferring the column count the JSON recorded.
+    function inferGrid(img, data) {
+        let fw = data.frameWidth, fh = data.frameHeight;
+        if (!(fw && fh) && data.frames) {
+            const first = Array.isArray(data.frames) ? data.frames[0] : data.frames[Object.keys(data.frames)[0]];
+            if (first && first.frame) { fw = first.frame.w; fh = first.frame.h; }
+        }
+        if (!(fw && fh)) return null;
+        const aspect = fw / fh, want = data.cols || 0;
+        let best = null;
+        for (let c = 1; c <= img.width; c++) {
+            if (img.width % c) continue;
+            const cw = img.width / c, ch = Math.round(cw / aspect);
+            if (ch < 1 || img.height % ch || Math.abs(cw / ch - aspect) > 0.02) continue;
+            const cand = { cols: c, rows: img.height / ch, cw };
+            // Rebuilds only ever shrink frames, so prefer the largest cell that is no bigger
+            // than the JSON's frame; among other candidates, the recorded column count wins.
+            const fits = cw <= fw + 0.5, bestFits = best && best.cw <= fw + 0.5;
+            if (!best || (fits && !bestFits) || (fits && bestFits && cw > best.cw) ||
+                (!fits && !bestFits && Math.abs(c - want) < Math.abs(best.cols - want))) best = cand;
+        }
+        return best && { cols: best.cols, rows: best.rows };
+    }
+
+    // Square-frame guess for grid slicing: rows = 1 for a strip, otherwise assume square cells.
+    function guessGrid() {
+        const w = loadedImage.width, h = loadedImage.height;
+        if (w >= h * 2 && w % h === 0) { $('cols').value = w / h; $('rows').value = 1; }
+        else if (h >= w * 2 && h % w === 0) { $('cols').value = 1; $('rows').value = h / w; }
+    }
+
+    $('upload').addEventListener('change', e => { const f = e.target.files[0]; if (f) setImageFile(f, f.name); });
+    $('jsonUpload').addEventListener('change', async e => { const f = e.target.files[0]; if (f) setJsonText(await readFileAsText(f)); });
+    $('extractBtn').addEventListener('click', () => loadCurrent(false));
+    $('reloadJsonBtn').addEventListener('click', () => loadCurrent(true));
+
+    // Drag & drop: accepts an image, a JSON, or both at once.
+    const dz = $('dropZone'); let dragDepth = 0;
+    dz.addEventListener('dragenter', e => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); dragDepth++; dz.classList.add('dragging'); } });
+    dz.addEventListener('dragover', e => { if (e.dataTransfer.types.includes('Files')) e.preventDefault(); });
+    dz.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; dz.classList.remove('dragging'); } });
+    dz.addEventListener('drop', async e => {
+        if (!e.dataTransfer.files.length) return;
+        e.preventDefault(); dragDepth = 0; dz.classList.remove('dragging');
+        const files = [...e.dataTransfer.files];
+        const json = files.find(f => /\.json$/i.test(f.name) || f.type === 'application/json');
+        const img = files.find(f => f.type.startsWith('image/'));
+        if (json) { loadedJson = null; try { loadedJson = JSON.parse(await readFileAsText(json)); } catch (err) { setInfo('That JSON file could not be parsed: ' + err.message, true); } }
+        if (img) await setImageFile(img, img.name);
+        else if (json && loadedImage) await loadCurrent(true);
+        else if (json) setInfo('JSON loaded. Now drop or choose the sheet image.');
+    });
+
+    // ---------- player ----------
+    function applyZoom() {
+        const z = $('zoom').value;
+        let scale;
+        if (z === 'fit') {
+            const avail = Math.max(100, $('stage').clientWidth - 24);
+            scale = Math.min(avail / frameW, 480 / frameH, frameW < 64 ? 8 : 4);
+        } else scale = +z;
+        playerCanvas.style.width = Math.round(frameW * scale) + 'px';
+        playerCanvas.style.height = Math.round(frameH * scale) + 'px';
+    }
+    $('zoom').addEventListener('change', applyZoom);
+    window.addEventListener('resize', () => { if ($('zoom').value === 'fit') applyZoom(); });
+    $('pixelated').addEventListener('change', () => {
+        playerCanvas.classList.toggle('pixelated', $('pixelated').checked);
+        gallery.querySelectorAll('.frame-box').forEach(c => c.classList.toggle('pixelated', $('pixelated').checked));
+    });
+
+    function draw(i) {
+        ctx.clearRect(0, 0, playerCanvas.width, playerCanvas.height);
+        if (!frames.length) { $('frameCounter').textContent = '— / —'; return; }
+        current = Math.max(0, Math.min(i, frames.length - 1));
+        ctx.drawImage(frames[current], 0, 0);
+        $('scrub').value = current;
+        $('frameCounter').textContent = `${current + 1} / ${frames.length}`;
+        gallery.querySelectorAll('.frame-wrap.current').forEach(n => n.classList.remove('current'));
+        const node = gallery.children[current];
+        if (node) node.classList.add('current');
+    }
+
+    function tick(t) {
+        if (!playing) return;
+        const fps = Math.max(1, +$('fps').value || 12);
+        if (t - lastTick >= 1000 / fps) {
+            // Carry the remainder forward so playback speed stays accurate on any refresh rate.
+            lastTick = t - ((t - lastTick) % (1000 / fps));
+            const mode = $('playMode').value;
+            let next = current + dir;
+            if (mode === 'pingpong' && frames.length > 1) {
+                if (next >= frames.length || next < 0) { dir = -dir; next = current + dir; }
+            } else if (next >= frames.length) {
+                if (mode === 'once') { pause(); return; }
+                next = 0;
+            }
+            draw(next);
+        }
+        rafId = requestAnimationFrame(tick);
+    }
+    function play() {
+        if (!frames.length || playing) return;
+        if ($('playMode').value === 'once' && current >= frames.length - 1) current = 0;
+        if ($('playMode').value !== 'pingpong') dir = 1;
+        playing = true; lastTick = performance.now();
+        $('playBtn').textContent = '❚❚ Pause';
+        rafId = requestAnimationFrame(tick);
+    }
+    function pause() { playing = false; cancelAnimationFrame(rafId); $('playBtn').textContent = '▶ Play'; }
+    function stop() { pause(); dir = 1; draw(0); }
+    $('playBtn').addEventListener('click', () => playing ? pause() : play());
+    $('stopBtn').addEventListener('click', stop);
+    $('prevBtn').addEventListener('click', () => { pause(); draw((current - 1 + frames.length) % frames.length); });
+    $('nextBtn').addEventListener('click', () => { pause(); draw((current + 1) % frames.length); });
+    $('scrub').addEventListener('input', e => { pause(); draw(+e.target.value); });
+
+    // ---------- gallery ----------
+    function thumbSize() { const s = Math.min(1, 96 / Math.max(frameW, frameH)); return [Math.max(16, Math.round(frameW * s)), Math.max(16, Math.round(frameH * s))]; }
+
+    let dragFrom = null;
+    function renderGallery() {
+        gallery.innerHTML = '';
+        const [tw, th] = thumbSize();
+        const pix = $('pixelated').checked;
+        frames.forEach((fr, i) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'frame-wrap' + (selected.has(i) ? ' selected' : '') + (i === current ? ' current' : '');
+            wrap.draggable = true;
+            const c = newCanvas(tw, th);
+            c.className = 'frame-box checker' + (pix ? ' pixelated' : '');
+            const cx = c.getContext('2d'); cx.imageSmoothingEnabled = !pix;
+            cx.drawImage(fr, 0, 0, tw, th);
+            c.title = `Frame ${i + 1}`;
+            const num = document.createElement('span'); num.className = 'frame-num'; num.textContent = i + 1;
+            wrap.append(c, num);
+
+            wrap.addEventListener('click', e => {
+                if (e.shiftKey && anchor !== null) {
+                    if (!(e.ctrlKey || e.metaKey)) selected.clear();
+                    const [a, b] = [Math.min(anchor, i), Math.max(anchor, i)];
+                    for (let k = a; k <= b; k++) selected.add(k);
+                } else {
+                    selected.has(i) ? selected.delete(i) : selected.add(i);
+                    anchor = i;
+                }
+                refreshSelection();
+            });
+            wrap.addEventListener('dblclick', () => { pause(); draw(i); });
+            wrap.addEventListener('dragstart', e => { dragFrom = i; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(i)); });
+            wrap.addEventListener('dragover', e => { if (dragFrom !== null) { e.preventDefault(); wrap.classList.add('drag-over'); } });
+            wrap.addEventListener('dragleave', () => wrap.classList.remove('drag-over'));
+            wrap.addEventListener('drop', e => {
+                e.preventDefault(); e.stopPropagation(); wrap.classList.remove('drag-over');
+                if (dragFrom === null || dragFrom === i) return;
+                pushUndo();
+                const [moved] = frames.splice(dragFrom, 1);
+                frames.splice(i, 0, moved);
+                selected.clear(); current = i; dragFrom = null;
+                refresh();
+            });
+            wrap.addEventListener('dragend', () => { dragFrom = null; });
+            gallery.appendChild(wrap);
+        });
+    }
+    function refreshSelection() {
+        [...gallery.children].forEach((n, i) => n.classList.toggle('selected', selected.has(i)));
+        $('selInfo').textContent = frames.length ? `${selected.size} of ${frames.length} selected` : '';
+        $('exportSelectedBtn').disabled = selected.size === 0;
+    }
+    function refresh() {
+        const has = frames.length > 0;
+        ['playBtn', 'stopBtn', 'prevBtn', 'nextBtn', 'exportBtn'].forEach(id => $(id).disabled = !has);
+        $('scrub').disabled = !has; $('scrub').max = Math.max(0, frames.length - 1);
+        $('undoBtn').disabled = undoStack.length === 0;
+        if (current >= frames.length) current = Math.max(0, frames.length - 1);
+        renderGallery(); refreshSelection(); draw(current);
+    }
+
+    // ---------- edit actions ----------
+    function pushUndo() { undoStack.push(frames.slice()); if (undoStack.length > 50) undoStack.shift(); }
+    const sel = () => [...selected].sort((a, b) => a - b);
+
+    const actions = {
+        all() { frames.forEach((_, i) => selected.add(i)); refreshSelection(); },
+        none() { selected.clear(); refreshSelection(); },
+        invert() { const s = new Set(); frames.forEach((_, i) => { if (!selected.has(i)) s.add(i); }); selected = s; refreshSelection(); },
+        delete() {
+            if (!selected.size) return setInfo('Select frames to delete first.', true);
+            if (selected.size === frames.length && !confirm('Delete every frame?')) return;
+            pushUndo(); frames = frames.filter((_, i) => !selected.has(i)); selected.clear(); refresh();
+        },
+        duplicate() {
+            if (!selected.size) return setInfo('Select frames to duplicate first.', true);
+            pushUndo();
+            const idx = sel(), copies = idx.map(i => frames[i]);
+            const at = idx[idx.length - 1] + 1;
+            frames.splice(at, 0, ...copies);
+            selected = new Set(copies.map((_, k) => at + k)); refresh();
+        },
+        reverse() {
+            if (frames.length < 2) return;
+            pushUndo();
+            if (selected.size > 1) { const idx = sel(), vals = idx.map(i => frames[i]).reverse(); idx.forEach((i, k) => frames[i] = vals[k]); }
+            else frames.reverse();
+            refresh();
+        },
+        earlier() { move(-1); },
+        later() { move(1); },
+        undo() { if (!undoStack.length) return; frames = undoStack.pop(); selected.clear(); refresh(); }
+    };
+    function move(d) {
+        if (!selected.size) return setInfo('Select frames to move first.', true);
+        const idx = sel();
+        if ((d < 0 && idx[0] === 0) || (d > 0 && idx[idx.length - 1] === frames.length - 1)) return;
+        pushUndo();
+        const order = d < 0 ? idx : idx.slice().reverse();
+        for (const i of order) { const j = i + d; [frames[i], frames[j]] = [frames[j], frames[i]]; }
+        selected = new Set(idx.map(i => i + d)); refresh();
+    }
+    document.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => actions[b.dataset.act]()));
+
+    document.addEventListener('keydown', e => {
+        if (e.target.matches('input, select, textarea') || !frames.length) return;
+        if (e.key === ' ') { e.preventDefault(); playing ? pause() : play(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); $('prevBtn').click(); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); $('nextBtn').click(); }
+        else if (e.key === 'Delete' || e.key === 'Backspace') { if (selected.size) { e.preventDefault(); actions.delete(); } }
+        else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') { e.preventDefault(); actions.all(); }
+        else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); actions.undo(); }
+    });
+
+    // ---------- export ----------
+    const downloadUrls = [];
+    function addDownload(label, blob, filename) {
+        const url = URL.createObjectURL(blob); downloadUrls.push(url);
+        const a = document.createElement('a');
+        a.className = 'download-btn'; a.href = url; a.download = filename; a.dataset.kind = 'editor';
+        a.textContent = label;
+        $('downloads').appendChild(a);
+    }
+
+    function exportFrames(list) {
+        if (!list.length) return;
+        downloadUrls.splice(0).forEach(u => URL.revokeObjectURL(u));
+        $('downloads').innerHTML = '';
+
+        const type = $('expFormat').value;
+        const ext = type === 'image/webp' ? 'webp' : 'png';
+        const name = baseName($('expName').value);
+        const cols = Math.max(1, Math.min(+$('expCols').value || 1, list.length));
+        const rows = Math.ceil(list.length / cols);
+        const fps = Math.max(1, +$('fps').value || 12);
+
+        const sheet = newCanvas(frameW * cols, frameH * rows);
+        if (sheet.width > 16384 || sheet.height > 16384) return setInfo(`That sheet would be ${sheet.width}×${sheet.height}px, larger than browsers can encode. Use more or fewer columns.`, true);
+        const sx = sheet.getContext('2d');
+        list.forEach((fr, i) => sx.drawImage(fr, (i % cols) * frameW, Math.floor(i / cols) * frameH));
+
+        const pad = Math.max(3, String(list.length - 1).length);
+        const json = {
+            frames: {},
+            meta: {
+                app: 'Video to Spritesheet — Sprite Editor',
+                image: `${name}.${ext}`,
+                format: 'RGBA8888',
+                size: { w: sheet.width, h: sheet.height },
+                scale: '1',
+                fps,
+                frameTags: [{ name: 'all', from: 0, to: list.length - 1, direction: $('playMode').value === 'pingpong' ? 'pingpong' : 'forward' }]
+            },
+            frameWidth: frameW, frameHeight: frameH, cols, rows, count: list.length, fps
+        };
+        list.forEach((_, i) => {
+            json.frames[`frame_${String(i).padStart(pad, '0')}.${ext}`] = {
+                frame: { x: (i % cols) * frameW, y: Math.floor(i / cols) * frameH, w: frameW, h: frameH },
+                rotated: false, trimmed: false,
+                spriteSourceSize: { x: 0, y: 0, w: frameW, h: frameH },
+                sourceSize: { w: frameW, h: frameH },
+                duration: Math.round(1000 / fps)
+            };
+        });
+
+        sheet.toBlob(blob => {
+            if (!blob) return setInfo('The browser could not encode that image.', true);
+            addDownload(`Download ${name}.${ext} (${sheet.width}×${sheet.height}, ${list.length} frames)`, blob, `${name}.${ext}`);
+            addDownload(`Download ${name}.json`, new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' }), `${name}.json`);
+            if (window.gtag && window.SITE_CONFIG && window.SITE_CONFIG.ga4) gtag('event', 'editor_export', { frames: list.length });
+        }, type, 0.9);
+    }
+    $('exportBtn').addEventListener('click', () => exportFrames(frames));
+    $('exportSelectedBtn').addEventListener('click', () => {
+        if (!selected.size) return setInfo('Select frames to export first.', true);
+        exportFrames(sel().map(i => frames[i]));
+    });
+
+    // ---------- hand-off from the converter page ----------
+    // The converter stores its latest sheet + JSON in IndexedDB and links here with ?from=converter.
+    if (new URLSearchParams(location.search).get('from') === 'converter') {
+        try {
+            const req = indexedDB.open('vts-handoff', 1);
+            req.onupgradeneeded = () => req.result.createObjectStore('h');
+            req.onsuccess = () => {
+                const db = req.result;
+                const tx = db.transaction('h', 'readwrite');
+                const store = tx.objectStore('h');
+                const get = store.get('latest');
+                get.onsuccess = async () => {
+                    const item = get.result;
+                    store.delete('latest');
+                    if (!item) return setInfo('Nothing was handed over from the converter. Load a sheet below.', true);
+                    loadedJson = null;
+                    if (item.json) { try { loadedJson = JSON.parse(item.json); } catch (e) { /* fall back to grid */ } }
+                    if (loadedJson && loadedJson.cols && loadedJson.rows) { $('cols').value = loadedJson.cols; $('rows').value = loadedJson.rows; }
+                    await setImageFile(item.sheet, item.name || 'spritesheet');
+                    history.replaceState(null, '', location.pathname);
+                };
+            };
+        } catch (e) { setInfo('Could not receive the sheet from the converter. Download it there and load it here instead.', true); }
+    }
+})();
+</script>
+</body>
+</html>

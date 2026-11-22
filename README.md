@@ -1,4 +1,4 @@
-# AI Video Asset Creator
+# Video to Spritesheet
 
 Free in-browser tool that turns video clips into sprite sheets, animated GIFs, frame ZIPs and TexturePacker JSON atlases, with chroma-key background removal.
 

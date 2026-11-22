@@ -1,4 +1,4 @@
-# Launch checklist: AI Video Asset Creator
+# Launch checklist: Video to Spritesheet
 
 The site is a static site in `public/`, with no server and no build step. Your visitors' videos never leave their browsers, so hosting costs almost nothing. Revenue comes from Google AdSense, plus an optional tip-jar link.
 
@@ -95,7 +95,8 @@ AdSense on a niche tool typically earns **£2–£10 per 1,000 page views** (mor
 | What | File |
 |---|---|
 | Ad IDs, GA4, tip jar, contact email | `public/assets/site.js` |
-| The tool itself | `public/index.html` |
+| Video → sprite sheet converter | `public/index.html` |
+| Sprite sheet editor & player | `public/editor.html` |
 | Guides (SEO content) | `public/guides/*.html` |
 | Privacy / Terms (required by AdSense) | `public/privacy.html`, `public/terms.html` |
 | Domain + publisher ID find-and-replace | `scripts/configure.sh` |

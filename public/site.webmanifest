@@ -1,6 +1,6 @@
 {
-  "name": "AI Video Asset Creator",
-  "short_name": "Asset Creator",
+  "name": "Video to Spritesheet",
+  "short_name": "Spritesheet",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f0f2f5",
