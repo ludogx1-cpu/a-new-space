@@ -8,7 +8,7 @@
 window.SITE_CONFIG = {
     // Google AdSense publisher ID, e.g. "ca-pub-1234567890123456".
     // Leave as the placeholder until AdSense gives you one.
-    adsenseClient: 'ca-pub-XXXXXXXXXXXXXXXX',
+    adsenseClient: 'ca-pub-2047805482197197',
 
     // Ad unit slot IDs from AdSense > Ads > By ad unit > Display ads.
     // Any slot left empty is hidden. If you prefer Google "Auto ads",
@@ -26,7 +26,7 @@ window.SITE_CONFIG = {
     supportUrl: '',
 
     // Shown on the Contact page. Use a dedicated address, not your personal one.
-    contactEmail: 'hello@example.com'
+    contactEmail: 'goldenpaw.dogeadmin@gmail.com'
 };
 
 (function () {

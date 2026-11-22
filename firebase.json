@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "gp-animate",
     "public": "public",
     "cleanUrls": false,
     "ignore": [

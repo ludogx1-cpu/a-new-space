@@ -6,7 +6,7 @@
     --gold: #c9a227; --on-accent: #ffffff;
 }
 [data-theme="dark"] {
-    --bg: #0b1020; --panel: #151c2e; --text: #e6e6e6; --muted: #a8adb5;
+    --bg: #0b0f19; --panel: #121826; --text: #e6e6e6; --muted: #a8adb5;
     --border: #2c3650; --border-soft: #1f2840; --accent: #c9a227; --accent-hover: #d9b440;
     --accent-soft: #1f2840; --accent-softer: #19213a; --success: #2fbf5f; --shadow: rgba(0,0,0,0.5);
     --gold: #c9a227; --on-accent: #1a1400;
@@ -73,3 +73,7 @@ body.content-page { font-family: system-ui, sans-serif; padding: 20px; max-width
 .showcase-card figcaption a { color: var(--accent); font-weight: 600; margin-top: 2px; }
 .kbd { font: 0.85em monospace; border: 1px solid var(--border); border-radius: 3px; padding: 0 4px; background: var(--accent-softer); }
 .article h3 { margin-top: 1.4em; margin-bottom: 0.4em; }
+
+/* Golden Paw Studios typography */
+body, body.content-page { font-family: 'Inter', system-ui, sans-serif; }
+h1, h2, h3, .site-nav .brand, .showcase h2 { font-family: 'Outfit', 'Inter', system-ui, sans-serif; letter-spacing: -0.01em; }

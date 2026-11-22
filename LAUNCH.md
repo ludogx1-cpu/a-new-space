@@ -12,15 +12,15 @@ The domain is already filled in. To use a different one, run:
 
 ## 1. Deploy to Firebase Hosting (free)
 
-Use the Google account you run Golden Paw with (or a new one for the business).
+The tool deploys as a **second site inside your existing Golden Paw Firebase project** (`golden-paw-database`), so it's under the same Google account as the app. `firebase.json` and `.firebaserc` are already set up for this.
 
 ```bash
 npm install -g firebase-tools
-firebase login
-firebase projects:create goldenpaw-animate     # any free ID
+firebase login                                   # the Golden Paw Google account
+firebase hosting:sites:create gp-animate --project golden-paw-database
 ```
 
-Put that project ID into `.firebaserc`, then:
+Then:
 
 ```bash
 firebase deploy --only hosting
@@ -63,7 +63,11 @@ Short screen recordings of these (video in → Shiba sprite out) are also your b
 2. **Google Analytics 4:** add a Web data stream for `animate.goldenpaw.dog` (in the Golden Paw property, or a new one) and paste the `G-…` ID into `ga4` in `public/assets/site.js`. Exports are tracked as `file_download` and `editor_export` events.
 3. In `site.js`, also set `contactEmail` to a real address (for example `hello@goldenpaw.dog`). It currently shows a placeholder.
 
-## 5. Advertising: read this before applying
+## 5. Advertising
+
+Golden Paw already has an approved AdSense account (`pub-2047805482197197`), and `https://goldenpaw.dog/ads.txt` already lists it. That covers `animate.goldenpaw.dog` too. The publisher ID is filled in, so ads appear once you either switch on **Auto ads** for goldenpaw.dog in AdSense, or create three display ad units and paste their slot IDs into `adSlots` in `public/assets/site.js`. The ad spaces stay hidden until then.
+
+### Policy notes (kept from the earlier review)
 
 Golden Paw is an 18+ game with Dogecoin rewards, and that matters for Google AdSense:
 
