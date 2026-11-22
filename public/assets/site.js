@@ -80,7 +80,7 @@ window.SITE_CONFIG = {
     }
 
     // Installable app: offline support via the service worker (website only).
-    if (!isExtension && 'serviceWorker' in navigator && location.protocol === 'https:') {
+    if (!isExtension && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
         window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); });
     }
 

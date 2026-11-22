@@ -12,7 +12,8 @@
     --gold: #c9a227; --on-accent: #1a1400;
 }
 
-body { border-top: 4px solid var(--gold); }
+html { border-top: 4px solid var(--gold); }
+input[type="range"], input[type="checkbox"], input[type="radio"], progress { accent-color: var(--accent); }
 
 .site-nav {
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
@@ -33,6 +34,7 @@ body { border-top: 4px solid var(--gold); }
 
 .site-footer { margin-top: 40px; padding: 20px 0 10px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.88em; text-align: center; line-height: 1.8; }
 .site-footer a { color: var(--muted); margin: 0 8px; }
+.site-footer div + div a { margin: 0; }
 .site-footer a:hover { color: var(--accent); }
 
 /* Content pages + SEO sections on the tool page */
@@ -77,3 +79,5 @@ body.content-page { font-family: system-ui, sans-serif; padding: 20px; max-width
 /* Golden Paw Studios typography */
 body, body.content-page { font-family: 'Inter', system-ui, sans-serif; }
 h1, h2, h3, .site-nav .brand, .showcase h2 { font-family: 'Outfit', 'Inter', system-ui, sans-serif; letter-spacing: -0.01em; }
+.article pre { overflow-x: auto; max-width: 100%; background: var(--accent-softer); border: 1px solid var(--border-soft); border-radius: 6px; padding: 12px 14px; font-size: 0.88em; line-height: 1.5; }
+.article pre code { background: none; padding: 0; }

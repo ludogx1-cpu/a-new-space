@@ -930,7 +930,12 @@ function seekTo(video, time, timeoutMs = 8000) {
             if (done) return;
             done = true;
             clearTimeout(timer);
-            resolve();
+            // Some browsers report 'seeked' before the new picture can be drawn.
+            if (video.readyState >= 2) return resolve();
+            const ready = () => { clearTimeout(fallback); resolve(); };
+            const fallback = setTimeout(() => { video.removeEventListener('loadeddata', ready); video.removeEventListener('canplay', ready); resolve(); }, 1500);
+            video.addEventListener('loadeddata', ready, { once: true });
+            video.addEventListener('canplay', ready, { once: true });
         };
         video.addEventListener('seeked', onSeeked, { once: true });
         video.currentTime = time;
@@ -958,15 +963,17 @@ function applyLoopMode() {
 async function processVideoFile(file, scale, options) {
     const video = document.createElement('video');
     const vurl = URL.createObjectURL(file);
-    video.src = vurl;
+    video.preload = 'auto';
     video.muted = true;
+    video.src = vurl;
     try {
+        // Wait for the first decoded picture, not just the metadata: capturing at 0s
+        // before then draws an empty canvas, which used to make frame 1 blank.
         await new Promise((resolve, reject) => {
-            if (video.readyState >= 1) resolve();
-            else {
-                video.onloadedmetadata = () => resolve();
-                video.onerror = () => reject(new Error('Video failed to load'));
-            }
+            if (video.readyState >= 2) return resolve();
+            const t = setTimeout(() => (video.readyState >= 1 ? resolve() : reject(new Error('Video failed to load'))), 10000);
+            video.addEventListener('loadeddata', () => { clearTimeout(t); resolve(); }, { once: true });
+            video.onerror = () => { clearTimeout(t); reject(new Error('Video failed to load')); };
         });
 
         const startSec = inputsToSeconds(startInputs);

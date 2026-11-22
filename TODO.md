@@ -3,8 +3,8 @@
 Tick items off as you go. **You** = needs your accounts or your decision. **Claude** = I can do it in a session.
 
 ## 1. Unblock and approve
-- [ ] **You:** turn off the *cortex* plugin in claude.ai plugin settings, so Claude can test in a real browser.
-- [ ] **Claude:** full browser test: process a video, GIF export, Rebuild + JSON, Open in Sprite Editor, editor edits and export, install as app, offline mode, extension.
+- [x] **You:** turn off the *cortex* plugin in claude.ai plugin settings, so Claude can test in a real browser.
+- [x] **Claude:** full browser test (all passing; re-run with `node tests/e2e.js`): every page on desktop and phone, process a video, green-screen removal, trim, GIF, ZIP, Rebuild + JSON, Open in Sprite Editor, editor edits/undo/export, keyboard selection, offline mode, and the extension loaded in Chromium.
 - [ ] **You:** say "open the PRs". **Claude** opens two pull requests:
   - `ludogx1-cpu/a-new-space`: the tool → `main`
   - `ludogx1-cpu/gp-vault`: Studios page card → `main`
@@ -26,7 +26,7 @@ Tick items off as you go. **You** = needs your accounts or your decision. **Clau
 - [ ] **You:** Search Console → submit `https://animate.goldenpaw.dog/sitemap.xml`.
 
 ## 4. App stores and extension
-- [ ] **Claude** (after browser access): capture store screenshots at 1280×800.
+- [x] **Claude:** store screenshots at 1280×800 are in `store-assets/` (featuring the Golden Paw Shiba).
 - [ ] **You:** Chrome Web Store: you already have a developer account. Upload `dist/golden-paw-animate-extension.zip` as a new item, privacy policy `https://animate.goldenpaw.dog/privacy.html`, data use: *does not collect user data*.
 - [ ] **You:** Edge Add-ons (free): same zip.
 - [ ] **You** (optional): Google Play via PWABuilder ($25 one-off). Steps in `APPS.md`.
@@ -50,7 +50,7 @@ Tick items off as you go. **You** = needs your accounts or your decision. **Clau
 - **One-command check:** `python3 scripts/check.py` checks links, scripts, the offline cache list and the library hashes, and builds the extension. Run it before every deploy.
 
 ### Still to improve (most important first)
-1. **Real-browser tests:** nothing has been clicked through in a browser yet. Needs the cortex plugin off; then add automated smoke tests too.
+1. **Done: real-browser tests.** `tests/e2e.js` covers the full flow. Found and fixed in testing: the first captured frame was always blank, and the Phaser guide scrolled sideways on phones.
 2. **Consent:** the tool relies on Google's AdSense consent message for UK/EU visitors (section 3). If you'd rather match the main site's Cloudflare Zaraz banner, Claude can port Golden Paw's `consent.js` gate.
 3. **Very large sheets in the editor:** frames are held in memory as full-size images. A 200-frame 1024px sheet uses about 800 MB. Add a warning, or work from the sheet directly.
 4. **iPhone / Safari:** video decoding and WebP export behave differently on iOS. Test there specifically.
