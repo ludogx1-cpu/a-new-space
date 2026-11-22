@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PUB, SRC, OUT = ROOT / 'public', ROOT / 'extension-src', ROOT / 'dist' / 'extension'
 
 PAGES = ['index.html', 'editor.html', 'how-to-use.html']
-DIRS = ['assets', 'vendor', 'showcase']
+DIRS = ['assets', 'vendor', 'showcase', 'fonts']
 SKIP = {'og-image.png'}  # only used for social sharing
 
 if OUT.exists():

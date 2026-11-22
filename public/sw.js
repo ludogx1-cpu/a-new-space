@@ -11,6 +11,7 @@ const CORE = [
     '/assets/site.css', '/assets/site.js', '/assets/converter.js', '/assets/editor.js', '/assets/showcase.js',
     '/assets/paw-logo-192.png', '/assets/icon-512.png',
     '/vendor/jszip.min.js', '/vendor/gif.js', '/vendor/gif.worker.js',
+    '/fonts/fonts.css', '/fonts/inter-latin.woff2', '/fonts/outfit-latin.woff2',
     '/site.webmanifest'
 ];
 

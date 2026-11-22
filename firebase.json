@@ -28,11 +28,20 @@
         ]
       },
       {
-        "source": "**/*.@(css|js|svg|png|webp)",
+        "source": "**/*.@(css|js|json|html)",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=86400"
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(png|webp|svg|woff2)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=604800"
           }
         ]
       },

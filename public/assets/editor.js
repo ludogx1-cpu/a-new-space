@@ -277,6 +277,18 @@
             const wrap = document.createElement('div');
             wrap.className = 'frame-wrap' + (selected.has(i) ? ' selected' : '') + (i === current ? ' current' : '');
             wrap.draggable = true;
+            wrap.tabIndex = 0;
+            wrap.setAttribute('role', 'checkbox');
+            wrap.setAttribute('aria-checked', selected.has(i) ? 'true' : 'false');
+            wrap.setAttribute('aria-label', `Frame ${i + 1}`);
+            // Keyboard: Enter/Space selects (Shift for a range), Alt+Enter shows it in the player.
+            wrap.addEventListener('keydown', e => {
+                if (e.key === 'Enter' && e.altKey) { e.preventDefault(); pause(); draw(i); return; }
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); e.stopPropagation();
+                    wrap.dispatchEvent(new MouseEvent('click', { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, metaKey: e.metaKey }));
+                }
+            });
             const c = newCanvas(tw, th);
             c.className = 'frame-box checker' + (pix ? ' pixelated' : '');
             const cx = c.getContext('2d'); cx.imageSmoothingEnabled = !pix;
@@ -314,7 +326,7 @@
         });
     }
     function refreshSelection() {
-        [...gallery.children].forEach((n, i) => n.classList.toggle('selected', selected.has(i)));
+        [...gallery.children].forEach((n, i) => { n.classList.toggle('selected', selected.has(i)); n.setAttribute('aria-checked', selected.has(i) ? 'true' : 'false'); });
         $('selInfo').textContent = frames.length ? `${selected.size} of ${frames.length} selected` : '';
         $('exportSelectedBtn').disabled = selected.size === 0;
     }

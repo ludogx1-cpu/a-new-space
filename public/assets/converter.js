@@ -588,6 +588,7 @@ function releaseFrames() {
     });
     frames = [];
     currentFrameIndex = 0;
+    lastExport = null;
 }
 
 // ============ Download helper ============
@@ -689,6 +690,8 @@ async function processFrameData(sourceElement, srcW, srcH, destW, destH, options
 // ============ Sprite sheet builder (from Blobs) ============
 let spritePreviewUrl = null; // track the sprite preview blob URL so we can revoke it
 let extractionScale = 1;     // the scale at which the cached frames were extracted
+/** What the last Process run packed into the sheet; used by Rebuild. */
+let lastExport = null;
 
 function nextPowerOfTwo(n) {
     let p = 1;
@@ -1066,8 +1069,7 @@ async function processImageFile(file, scale, options) {
  * When trimming ran, spriteSourceSize/sourceSize tell the engine where the cropped art
  * sat in the original frame so nothing shifts on screen.
  */
-function buildAtlasJson(spriteInfo, trimInfo, fps, ext, bakeLoop = false) {
-    const count = frames.length;
+function buildAtlasJson(spriteInfo, trimInfo, fps, ext, bakeLoop = false, count = frames.length) {
     const cols = spriteInfo ? spriteInfo.cols : (parseInt(spriteCols.value) > 0 ? Math.min(parseInt(spriteCols.value), count) : Math.ceil(Math.sqrt(count)));
     const rows = spriteInfo ? spriteInfo.rows : Math.ceil(count / cols);
     const fw = spriteInfo ? spriteInfo.w : (trimInfo ? trimInfo.w : (untrimmedSize ? untrimmedSize.w : 0));
@@ -1195,6 +1197,9 @@ generateBtn.addEventListener('click', async () => {
 
         if (outZipWebp.checked) await createZipArchive(frames, ext);
         if (outSpriteWebp.checked) spriteInfo = await buildSpriteSheet(frames, isImage, parseInt(spriteCols.value));
+        // Remember exactly which frames the sheet and JSON describe, before the
+        // preview-only loop expansion below, so Rebuild can repack the same set.
+        lastExport = { sheetFrames: frames.slice(), trimInfo, fps, bakeLoop, isImage };
 
         if (outMetaJson.checked && frames.length > 0) {
             const meta = buildAtlasJson(spriteInfo, trimInfo, fps, ext, bakeLoop);
@@ -1284,9 +1289,26 @@ rebuildBtn.addEventListener('click', async () => {
         a.remove();
     });
     try {
-        const isImage = frames.length === 1;
+        const src = lastExport ? lastExport.sheetFrames : frames;
+        const isImage = lastExport ? lastExport.isImage : frames.length === 1;
         const t0 = performance.now();
-        await buildSpriteSheet(frames, isImage, parseInt(spriteCols.value), effectiveRelative);
+        const spriteInfo = await buildSpriteSheet(src, isImage, parseInt(spriteCols.value), effectiveRelative);
+
+        // Regenerate the atlas so it matches the rebuilt sheet (size, columns, trim offsets).
+        downloadContainer.querySelectorAll('a.download-btn[download="spritesheet.json"]').forEach(a => {
+            URL.revokeObjectURL(a.href);
+            const i = activeUrls.indexOf(a.href);
+            if (i >= 0) activeUrls.splice(i, 1);
+            a.remove();
+        });
+        if (outMetaJson.checked && lastExport && !isImage) {
+            const t = lastExport.trimInfo;
+            const k = t ? spriteInfo.w / t.w : 1;
+            const scaledTrim = t ? { ...t, x: Math.round(t.x * k), y: Math.round(t.y * k), w: spriteInfo.w, h: spriteInfo.h,
+                                     sourceW: Math.round(t.sourceW * k), sourceH: Math.round(t.sourceH * k) } : null;
+            const meta = buildAtlasJson(spriteInfo, scaledTrim, lastExport.fps, outExt(), lastExport.bakeLoop, src.length);
+            addDownloadButton('Download atlas metadata (.json)', new Blob([JSON.stringify(meta, null, 2)], { type: 'application/json' }), 'spritesheet.json');
+        }
         const dt = ((performance.now() - t0) / 1000).toFixed(2);
         const qualityNote = outFormat() === 'image/png' ? 'PNG (lossless)' : `quality ${webpQuality.value}%`;
         addEditorHandoff();
