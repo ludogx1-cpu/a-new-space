@@ -5,18 +5,17 @@ Tick items off as you go. **You** = needs your accounts or your decision. **Clau
 ## 1. Unblock and approve
 - [x] **You:** turn off the *cortex* plugin in claude.ai plugin settings, so Claude can test in a real browser.
 - [x] **Claude:** full browser test (all passing; re-run with `node tests/e2e.js`): every page on desktop and phone, process a video, green-screen removal, trim, GIF, ZIP, Rebuild + JSON, Open in Sprite Editor, editor edits/undo/export, keyboard selection, offline mode, and the extension loaded in Chromium.
-- [ ] **You:** say "open the PRs". **Claude** opens two pull requests:
-  - `ludogx1-cpu/a-new-space`: the tool → `main`
-  - `ludogx1-cpu/gp-vault`: Studios page card → `main`
-- [ ] **You:** review and merge both.
+- [x] **Claude:** opened the two pull requests:
+  - ludogx1-cpu/a-new-space#2: the tool, **merged**
+  - ludogx1-cpu/gp-vault#7: Studios card, open until the tool is live
 
-## 2. Go live (about 30 minutes)
-- [ ] **You:** `firebase login` with the Golden Paw Google account.
-- [ ] **You:** `firebase hosting:sites:create gp-animate --project golden-paw-database`
-- [ ] **You:** from this repo, `python3 scripts/check.py` then `firebase deploy --only hosting`.
-- [ ] **You:** Firebase console → Hosting → *gp-animate* → **Add custom domain** → `animate.goldenpaw.dog`, then add the DNS records it shows. If goldenpaw.dog's DNS is on Cloudflare, set the new records to **DNS only** (grey cloud) so Firebase can issue the HTTPS certificate.
-- [ ] **You:** deploy the Golden Paw site as usual so the Studios card goes live.
-- [ ] **You:** open https://animate.goldenpaw.dog on your phone and computer and try one clip end to end.
+## 2. Go live (about 10 minutes, all in a web browser; steps in LAUNCH.md §1–2)
+- [x] **Claude:** GitHub deploy workflow (checks, creates the Firebase site, deploys; previews on PRs).
+- [ ] **You:** Google Cloud console → service account → Keys → create a JSON key.
+- [ ] **You:** GitHub → a-new-space → Settings → Secrets → Actions → `FIREBASE_SERVICE_ACCOUNT` = the key's contents.
+- [ ] **You:** GitHub → Actions → *Deploy Animation Tool* → **Run workflow**. Check https://gp-animate.web.app.
+- [ ] **You:** Firebase console → Hosting → gp-animate → **Add custom domain** `animate.goldenpaw.dog`, then add the DNS records (DNS only if on Cloudflare).
+- [ ] **You or Claude:** once https://animate.goldenpaw.dog loads, merge ludogx1-cpu/gp-vault#7 (the Studios card). goldenpaw.dog then redeploys by itself.
 
 ## 3. Ads, consent and analytics
 - [ ] **You:** AdSense → **Privacy & messaging → European regulations**: make sure a consent message is published for goldenpaw.dog. **Required before ads run for UK/EU visitors.** The tool has no cookie banner of its own; this message is its consent banner.

@@ -2,35 +2,38 @@
 
 The tool is a static site in `public/`, with no server and no build step. It lives at **`animate.goldenpaw.dog`**, a section of goldenpaw.dog that runs separately from the Golden Paw app, so nothing in the app's code has to change. Visitors' videos never leave their browsers, so hosting costs almost nothing.
 
-The domain is already filled in. To use a different one, run:
-
-```bash
-./scripts/configure.sh https://other.goldenpaw.dog
-```
+The domain is already filled in. To use a different one, ask Claude, or run `./scripts/configure.sh https://other.goldenpaw.dog` on any computer with a terminal.
 
 ---
 
-## 1. Deploy to Firebase Hosting (free)
+## 1. Deploy (no console needed)
 
-The tool deploys as a **second site inside your existing Golden Paw Firebase project** (`golden-paw-database`), so it's under the same Google account as the app. `firebase.json` and `.firebaserc` are already set up for this.
+GitHub deploys the site for you, the same way goldenpaw.dog already deploys. Every push to `main` runs the checks and publishes to Firebase Hosting (site `gp-animate` in your `golden-paw-database` project). The workflow creates that site itself the first time. It needs **one secret**, set up once in your browser:
 
-```bash
-npm install -g firebase-tools
-firebase login                                   # the Golden Paw Google account
-firebase hosting:sites:create gp-animate --project golden-paw-database
-```
+**a) Get a deploy key (Google Cloud console, about 2 minutes)**
+1. Open https://console.cloud.google.com/iam-admin/serviceaccounts?project=golden-paw-database, signed in with the Golden Paw Google account.
+2. Click the service account whose name starts with **github-action-** (Firebase made it when goldenpaw.dog's GitHub deploy was set up). If there isn't one, use **firebase-adminsdk-…**.
+3. Open the **Keys** tab → **Add key** → **Create new key** → **JSON** → **Create**. A `.json` file downloads. Keep it private and never post it anywhere.
 
-Then:
+**b) Give it to GitHub (about 1 minute)**
+1. Open https://github.com/ludogx1-cpu/a-new-space/settings/secrets/actions
+2. **New repository secret** → Name: `FIREBASE_SERVICE_ACCOUNT` → Secret: open the downloaded `.json` file and paste its **entire** contents → **Add secret**.
+3. Delete the downloaded file from your device.
 
-```bash
-firebase deploy --only hosting
-```
+**c) Deploy**
+1. Open https://github.com/ludogx1-cpu/a-new-space/actions/workflows/deploy.yml
+2. Click **Run workflow** → **Run workflow**. In about 2 minutes it shows a green tick, and the site is live at `https://gp-animate.web.app`.
+
+From then on, every change merged into `main` goes live by itself. Each pull request also gets a private preview link, posted as a comment on the PR.
+
+> **If the run fails with a permissions error:** in Google Cloud → **IAM**, give that service account the **Firebase Hosting Admin** role, then click **Re-run jobs**.
 
 ## 2. Point `animate.goldenpaw.dog` at it
 
-1. In the Firebase console go to **Hosting → Add custom domain** and enter `animate.goldenpaw.dog`.
+1. In the Firebase console (https://console.firebase.google.com/project/golden-paw-database/hosting/sites) open the **gp-animate** site → **Add custom domain** → enter `animate.goldenpaw.dog`.
 2. Firebase shows you DNS records (usually a TXT record and an A record). Add them wherever goldenpaw.dog's DNS is managed. This only creates the subdomain; the main site and app are untouched.
-3. HTTPS is issued automatically within about an hour.
+3. If goldenpaw.dog uses Cloudflare, set the new records to **DNS only** (grey cloud) so Firebase can issue the certificate.
+4. HTTPS is issued automatically, usually within an hour (it can take up to 24).
 
 **Link it from the app/site:** add a menu item or button on goldenpaw.dog, for example *"🐾 Animation Creation Tool"*, pointing to `https://animate.goldenpaw.dog/`. The tool already links back to goldenpaw.dog from its menu, footer, About page and showcase.
 
