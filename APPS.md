@@ -57,3 +57,16 @@ PWABuilder → **Windows** package → upload at https://partner.microsoft.com (
 
 ### Apple App Store (iPhone/iPad)
 PWABuilder → **iOS** produces an Xcode project. You need a Mac, Xcode and the Apple Developer Program ($99/year). Apple sometimes rejects apps that are "just a website" (guideline 4.2), so add-to-home-screen from Safari (already supported) is the practical iOS route for now.
+
+## 4. Pro desktop app (Windows)
+
+The `desktop/` folder wraps the same tool in Electron. It runs from a private `app://` address with cross-origin isolation switched on, so the AI uses several processor cores. In testing that made it about 2.4× faster than the browser on a 4-core machine. It shows no ads; Pro is still unlocked with the licence key.
+
+**Build the installer (no console needed):**
+1. GitHub → **Actions** → **Build desktop app** → **Run workflow**.
+2. When it finishes (about 10 minutes), open the run and download **Golden-Paw-Animation-Windows** under *Artifacts*. Inside is `Golden-Paw-Animation-Setup-1.0.0.exe`.
+3. In Lemon Squeezy, open the Pro product → **Files** → upload the `.exe`. Buyers then get a download link in their purchase email, next to their licence key.
+
+To release an update, raise `"version"` in `desktop/package.json` and run the workflow again.
+
+**Windows "unknown publisher" warning:** the installer isn't code-signed yet, so Windows SmartScreen shows a warning on first run (users click *More info → Run anyway*). A code-signing certificate (about £100–300/year, or Azure Trusted Signing) removes it. That's worth it once sales justify it.
