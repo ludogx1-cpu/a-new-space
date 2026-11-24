@@ -188,6 +188,13 @@
         .warn-box.hidden, .hidden { display: none !important; }
         .pro-badge { display: inline-block; font-size: 0.68em; font-weight: 800; letter-spacing: 0.08em; color: #1a1400; background: #c9a227; border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
         #aiPreviewBtn { background: var(--secondary); font-size: 0.9em; padding: 6px 12px; color: #fff; }
+        .preset-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 4px; }
+        .preset-row select { max-width: 100%; }
+        .preset-row input[type="text"] { padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text); flex: 1 1 140px; min-width: 0; }
+        button.small-btn { font-size: 0.9em; padding: 6px 12px; }
+        .batch-box { margin-top: 14px; padding: 10px 14px; border: 1px dashed var(--border); border-radius: 6px; }
+        .batch-box summary { cursor: pointer; }
+        .batch-box input[type="file"] { flex: 1 1 220px; width: auto; min-width: 0; }
         select { padding: 6px; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text); font-size: 0.95em; }
         .sub-setting { margin-top: 10px; }
         .sub-setting label { font-weight: bold; }
@@ -249,6 +256,16 @@
         <div class="setting-group">
             <input type="file" id="videoUpload" accept=".mp4,.webm,.mov,video/*,image/*" aria-label="Upload Video or Image" title="Upload Video or Image">
             <span class="desc">Select a Video (MP4, WebM, MOV) or Image (PNG, WebP). You can also drag &amp; drop a file anywhere on this panel.</span>
+
+            <details class="batch-box" id="batchBox">
+                <summary><strong>📦 Batch: convert many clips at once</strong> <span class="pro-badge">PRO</span></summary>
+                <span class="desc">Choose several videos. Each whole clip is processed with your settings below, and you get one ZIP with a folder per clip (sprite sheet, JSON and any other outputs you ticked).</span>
+                <div class="flex-row-center" style="margin-top:8px;">
+                    <input type="file" id="batchUpload" multiple accept=".mp4,.webm,.mov,video/*" aria-label="Choose clips for batch processing">
+                    <button type="button" id="batchBtn" class="small-btn" disabled>Process batch</button>
+                </div>
+                <span class="desc" id="batchStatus" role="status"></span>
+            </details>
 
             <video id="sourceVideoPlayer" controls></video>
             <div id="timeDisplayContainer">
@@ -377,6 +394,15 @@
 
     <div class="panel">
         <h3>2. Output Formats (Tick all you need)</h3>
+
+        <div class="preset-row">
+            <label for="presetSelect"><strong>Presets:</strong></label>
+            <select id="presetSelect" title="Load a set of settings"></select>
+            <button type="button" id="presetDelete" class="small-btn" disabled>Delete</button>
+            <input type="text" id="presetName" maxlength="40" placeholder="Name your settings…" aria-label="Preset name">
+            <button type="button" id="presetSave" class="small-btn">Save current <span class="pro-badge">PRO</span></button>
+        </div>
+        <span class="desc" id="presetMsg" role="status"></span>
 
         <div class="checkbox-list">
             <div class="checkbox-item">
@@ -537,5 +563,6 @@
     <script src="/assets/pro.js"></script>
     <script src="/assets/ai-bg.js"></script>
     <script src="/assets/converter.js"></script>
+    <script src="/assets/pro-tools.js"></script>
 </body>
 </html>

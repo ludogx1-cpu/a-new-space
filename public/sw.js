@@ -9,7 +9,7 @@ const VERSION = 'gp-animate-v1';
 const CORE = [
     '/', '/index.html', '/editor.html', '/how-to-use.html', '/404.html',
     '/assets/site.css', '/assets/site.js', '/assets/converter.js', '/assets/editor.js', '/assets/showcase.js',
-    '/assets/pro.js', '/assets/pro-page.js', '/assets/ai-bg.js', '/assets/ai-worker.js', '/pro.html',
+    '/assets/pro.js', '/assets/pro-page.js', '/assets/ai-bg.js', '/assets/ai-worker.js', '/assets/pro-tools.js', '/pro.html',
     '/assets/paw-logo-192.png', '/assets/icon-512.png',
     '/vendor/jszip.min.js', '/vendor/gif.js', '/vendor/gif.worker.js',
     '/fonts/fonts.css', '/fonts/inter-latin.woff2', '/fonts/outfit-latin.woff2',

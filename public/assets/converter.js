@@ -1337,6 +1337,8 @@ generateBtn.addEventListener('click', async () => {
         cancelBtn.innerText = 'Cancel';
         activeGif = null;
         progressBar.style.display = 'none';
+        // Lets batch mode (pro-tools.js) know this run has finished.
+        document.dispatchEvent(new CustomEvent('gp:processed'));
     }
 });
 // ============ Rebuild sprite sheet from cached frames (no re-decode) ============

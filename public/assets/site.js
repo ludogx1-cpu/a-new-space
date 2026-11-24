@@ -157,6 +157,7 @@ window.SITE_CONFIG = {
             document.querySelectorAll('[data-install]').forEach(function (b) { b.remove(); });
             // The extension is the free, ad-free edition: Pro and its AI live on the website and desktop app.
             var ai = document.getElementById('aiGroup'); if (ai) ai.remove();
+            ['batchBox', 'presetSave', 'presetName'].forEach(function (id) { var el = document.getElementById(id); if (el) el.remove(); });
             document.querySelectorAll('a.nav-pro').forEach(function (a) { a.closest('li').remove(); });
         }
 
