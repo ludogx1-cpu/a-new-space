@@ -151,8 +151,8 @@ window.SITE_CONFIG = {
         if (isExtension) {
             var bundled = /^\/(index\.html|editor\.html|how-to-use\.html)?$/;
             document.querySelectorAll('a[href^="/"]').forEach(function (a) {
-                var u = new URL(a.getAttribute('href'), 'https://animate.goldenpaw.dog');
-                if (!bundled.test(u.pathname)) { a.href = 'https://animate.goldenpaw.dog' + u.pathname + u.search + u.hash; a.target = '_blank'; a.rel = 'noopener'; }
+                var u = new URL(a.getAttribute('href'), 'https://goldenpaw.dog/studios/animation');
+                if (!bundled.test(u.pathname)) { a.href = 'https://goldenpaw.dog/studios/animation' + u.pathname + u.search + u.hash; a.target = '_blank'; a.rel = 'noopener'; }
             });
             document.querySelectorAll('[data-install]').forEach(function (b) { b.remove(); });
             // The extension is the free, ad-free edition: Pro and its AI live on the website and desktop app.

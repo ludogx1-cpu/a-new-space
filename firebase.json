@@ -58,6 +58,13 @@
           }
         ]
       }
+    ],
+    "redirects": [
+      {
+        "source": "/:path*",
+        "destination": "https://goldenpaw.dog/studios/animation/:path",
+        "type": 301
+      }
     ]
   }
 }

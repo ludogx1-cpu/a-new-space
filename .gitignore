@@ -3,3 +3,4 @@
 .site-config
 dist/extension/
 node_modules/
+dist/subpath/

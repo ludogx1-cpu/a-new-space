@@ -1,5 +1,15 @@
 # Launch checklist: Golden Paw Animation Creation Tool
 
+> **Update:** the tool now lives at **https://goldenpaw.dog/studios/animation/** inside the Golden Paw site.
+> To publish a change: edit `public/` here, run `python3 scripts/check.py`, then `python3 scripts/build-subpath.py`,
+> and copy `dist/subpath/` into gp-vault `web/studios/animation/` (Claude can do this and open the pull request).
+> animate.goldenpaw.dog redirects to the new address (see `firebase.json`).
+>
+> **Pro setup (one time, in Lemon Squeezy):**
+> 1. Create a store at https://app.lemonsqueezy.com (Lemon Squeezy is merchant of record: it handles VAT).
+> 2. New product: "Golden Paw Animation Pro", single payment, **£11.99**, tick **Generate licence keys**, activation limit **3**.
+> 3. Copy the product's **Buy link** and **Product ID** into `public/assets/site.js` → `SITE_CONFIG.pro` (`checkoutUrl`, `productId`), or send them to Claude.
+
 The tool is a static site in `public/`, with no server and no build step. It lives at **`animate.goldenpaw.dog`**, a section of goldenpaw.dog that runs separately from the Golden Paw app, so nothing in the app's code has to change. Visitors' videos never leave their browsers, so hosting costs almost nothing.
 
 The domain is already filled in. To use a different one, ask Claude, or run `./scripts/configure.sh https://other.goldenpaw.dog` on any computer with a terminal.
@@ -49,8 +59,8 @@ When the dog animations are finished:
 
    ```json
    [
-     { "title": "Shiba run cycle", "caption": "From a 2-second clip", "image": "/showcase/shiba-run.png", "atlas": "/showcase/shiba-run.json" },
-     { "title": "Happy tail wag",  "caption": "Green screen removed", "image": "/showcase/shiba-wag.png", "atlas": "/showcase/shiba-wag.json" }
+     { "title": "Shiba run cycle", "caption": "From a 2-second clip", "image": "shiba-run.png", "atlas": "shiba-run.json" },
+     { "title": "Happy tail wag",  "caption": "Green screen removed", "image": "shiba-wag.png", "atlas": "shiba-wag.json" }
    ]
    ```
 
