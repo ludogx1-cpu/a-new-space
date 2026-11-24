@@ -1,58 +1,47 @@
-# Golden Paw Animation Creation Tool: launch to-do
+# Golden Paw: to-do
 
-Tick items off as you go. **You** = needs your accounts or your decision. **Claude** = I can do it in a session.
+**You** = needs your accounts or your decision. **Claude** = I can do it in a session.
+Live now: **https://goldenpaw.dog/studios/animation/** (the Animation Creation Tool, inside Golden Paw Studios).
 
-## 1. Unblock and approve
-- [x] **You:** turn off the *cortex* plugin in claude.ai plugin settings, so Claude can test in a real browser.
-- [x] **Claude:** full browser test (all passing; re-run with `node tests/e2e.js`): every page on desktop and phone, process a video, green-screen removal, trim, GIF, ZIP, Rebuild + JSON, Open in Sprite Editor, editor edits/undo/export, keyboard selection, offline mode, and the extension loaded in Chromium.
-- [x] **Claude:** opened the two pull requests:
-  - ludogx1-cpu/a-new-space#2: the tool, **merged**
-  - ludogx1-cpu/gp-vault#7: Studios card, open until the tool is live
+## ✅ Done
+- Tool built, browser-tested and live at goldenpaw.dog/studios/animation (converter, sprite editor, guides, how-to, offline app, Chrome/Edge extension).
+- Golden Paw Studios card, menu and services page link to the tool.
+- goldenpaw.dog homepage: readable text for Google/AdSense, Shiba standing by the kennel, visible golden paw.
+- GitHub deploys set up (no console needed); previews on every pull request.
+- Pro built and tested: AI background removal (no green screen), batch processing, saved presets, no ads, Windows desktop app (installer builds on GitHub).
 
-## 2. Go live (about 10 minutes, all in a web browser; steps in LAUNCH.md §1–2)
-- [x] **Claude:** GitHub deploy workflow (checks, creates the Firebase site, deploys; previews on PRs).
-- [ ] **You:** Google Cloud console → service account → Keys → create a JSON key.
-- [ ] **You:** GitHub → a-new-space → Settings → Secrets → Actions → `FIREBASE_SERVICE_ACCOUNT` = the key's contents.
-- [ ] **You:** GitHub → Actions → *Deploy Animation Tool* → **Run workflow**. Check https://gp-animate.web.app.
-- [ ] **You:** Firebase console → Hosting → gp-animate → **Add custom domain** `animate.goldenpaw.dog`, then add the DNS records (DNS only if on Cloudflare).
-- [ ] **You or Claude:** once https://animate.goldenpaw.dog loads, merge ludogx1-cpu/gp-vault#7 (the Studios card). goldenpaw.dog then redeploys by itself.
+## 1. Finish launching Pro (£11.99 one-off)
+- [ ] **You:** merge ludogx1-cpu/a-new-space#4 (the Pro source code and desktop app; also redirects animate.goldenpaw.dog to the new address). The live site at /studios/animation already has Pro, with the buy button saying "opens soon" until the next step.
+- [ ] **You:** Lemon Squeezy: create the store and a product "Golden Paw Animation Pro": single payment **£11.99**, **Generate licence keys** on, activation limit **3**.
+- [ ] **You:** send Claude the product's **Buy link** and **Product ID**. **Claude** switches on the buy button.
+- [ ] **You:** download the Windows installer (GitHub → Actions → *Build desktop app* → Artifacts) and upload it as a file on the Lemon Squeezy product.
+- [ ] **You (later):** code-signing certificate to remove Windows' "unknown publisher" warning, once sales justify it.
 
-## 3. Ads, consent and analytics
-- [ ] **You:** AdSense → **Privacy & messaging → European regulations**: make sure a consent message is published for goldenpaw.dog. **Required before ads run for UK/EU visitors.** The tool has no cookie banner of its own; this message is its consent banner.
-- [ ] **You:** AdSense → **Sites**: confirm goldenpaw.dog is listed and ready.
-- [ ] **You:** pick one: switch on **Auto ads**, or create 3 display ad units and send Claude the slot IDs (they go in `public/assets/site.js`).
-- [ ] **You:** decide whether to track the tool in the Golden Paw Analytics property (`G-H0R68LWSK6`) or a new one, then add a web stream for `animate.goldenpaw.dog`. **Claude** puts the ID in `site.js`.
-- [ ] **You:** Search Console → submit `https://animate.goldenpaw.dog/sitemap.xml`.
+## 2. Ads and Google
+- [ ] **You:** in about a week (after Google re-reads the new homepage), AdSense → goldenpaw.dog → tick "I have fixed the issues" → **Request review**.
+- [ ] **You:** Search Console → URL Inspection → `https://goldenpaw.dog/` → **Request indexing** (speeds that up).
+- [ ] **You:** AdSense → **Privacy & messaging → European regulations**: publish a consent message (required for UK/EU visitors once ads run).
+- [ ] **You:** once approved, switch on **Auto ads**, or create 3 display ad units and send Claude the slot IDs.
+- [ ] **You:** decide on Analytics for the tool (use the Golden Paw property `G-H0R68LWSK6`?). **Claude** adds it.
 
-## 4. App stores and extension
-- [x] **Claude:** store screenshots at 1280×800 are in `store-assets/` (featuring the Golden Paw Shiba).
-- [ ] **You:** Chrome Web Store: you already have a developer account. Upload `dist/golden-paw-animate-extension.zip` as a new item, privacy policy `https://animate.goldenpaw.dog/privacy.html`, data use: *does not collect user data*.
+## 3. Stores
+- [ ] **You:** Chrome Web Store: upload `dist/golden-paw-animate-extension.zip` (screenshots in `store-assets/`), privacy policy `https://goldenpaw.dog/studios/animation/privacy.html`, "does not collect user data".
 - [ ] **You:** Edge Add-ons (free): same zip.
-- [ ] **You** (optional): Google Play via PWABuilder ($25 one-off). Steps in `APPS.md`.
+- [ ] **You (optional):** Google Play via PWABuilder ($25 one-off). Steps in `APPS.md`.
 
-## 5. Show off the Shiba
+## 4. Show off the Shiba
 - [ ] **You:** export each finished dog animation (sprite sheet + JSON, PNG) from the tool.
-- [ ] **You or Claude:** add them to `public/showcase/` and list them in `public/showcase/showcase.json`, then redeploy.
-- [ ] **You:** record 2–3 short "video in → Shiba sprite out" clips for TikTok, Instagram and X.
-- [ ] **Claude:** add a link to the tool inside the Golden Paw app (Flutter), and optionally a paid "custom sprite animation" card on the Studios services page (you set the price).
-- [ ] **You:** post in r/gamedev, r/IndieDev, r/aivideo and r/godot, list it on itch.io as a free tool, and share it on the Golden Paw socials.
+- [ ] **You or Claude:** add them to the showcase (`public/showcase/`), then publish.
+- [ ] **You:** 2–3 short "video in → Shiba sprite out" clips for TikTok, Instagram and X.
+- [ ] **Claude:** link to the tool from inside the Golden Paw app; optional paid "custom sprite animation" card on the Studios services page (you set the price).
+- [ ] **You:** post in r/gamedev, r/IndieDev, r/aivideo and r/godot; list on itch.io; share on Golden Paw socials.
 
----
+## 5. Golden Paw: next ideas
+- [ ] **Add a new Dog Care page** to goldenpaw.dog, with helpful dog-care guides and tips.
+- [ ] **Advertise some products to sell** on it: pick dog-care products to feature, link them through the Golden Paw Shop or as affiliate links, and add them to the page.
 
-## Review: what was improved, and what's left
-
-### Fixed in this review
-- **Rebuild bug:** Rebuild now writes a new JSON that matches the rebuilt sheet (size, columns, trim offsets). It also stopped packing the preview-only ping-pong frames into the sheet.
-- **Fonts:** now self-hosted, so no requests go to Google Fonts (better for privacy rules), they work offline and in the extension, and pages load a little faster.
-- **Updates reach people straight away:** scripts and pages now recheck with the server on every load, instead of being cached for a day.
-- **Keyboard access in the editor:** frames can be focused with Tab and selected with Enter or Space.
-- **One-command check:** `python3 scripts/check.py` checks links, scripts, the offline cache list and the library hashes, and builds the extension. Run it before every deploy.
-
-### Still to improve (most important first)
-1. **Done: real-browser tests.** `tests/e2e.js` covers the full flow. Found and fixed in testing: the first captured frame was always blank, and the Phaser guide scrolled sideways on phones.
-2. **Consent:** the tool relies on Google's AdSense consent message for UK/EU visitors (section 3). If you'd rather match the main site's Cloudflare Zaraz banner, Claude can port Golden Paw's `consent.js` gate.
-3. **Very large sheets in the editor:** frames are held in memory as full-size images. A 200-frame 1024px sheet uses about 800 MB. Add a warning, or work from the sheet directly.
-4. **iPhone / Safari:** video decoding and WebP export behave differently on iOS. Test there specifically.
-5. **Store listing assets:** screenshots, a short promo tile (440×280) and a description for the Chrome Web Store.
-6. **Firefox extension:** needs a small manifest variant.
-7. **More guides:** each new guide is another way in from Google. Ideas: "AI video to game sprite", "make a GIF with a transparent background", "Godot sprite sheet import".
+## Later improvements (Claude)
+1. Very large sheets in the editor: warn above ~200 big frames (memory).
+2. Test on iPhone/Safari specifically.
+3. Firefox version of the extension.
+4. More guides for Google traffic: "AI video to game sprite", "GIF with a transparent background", "Godot sprite sheet import".

@@ -21,6 +21,12 @@ const bakeLoopFrames = $('bakeLoopFrames');
 const bakeLoopRow = $('bakeLoopRow');
 
 const removeBgToggle = $('removeBgToggle');
+const aiBgToggle = $('aiBgToggle');
+const aiSettings = $('aiSettings');
+const aiLocked = $('aiLocked');
+const aiEdge = $('aiEdge');
+const aiStatus = $('aiStatus');
+const aiPreviewBtn = $('aiPreviewBtn');
 const bgColorInput = $('bgColor');
 const pickColorBtn = $('pickColorBtn');
 const bgToleranceInput = $('bgTolerance');
@@ -151,10 +157,65 @@ function syncBgPanels() {
     // you click to pick a colour, and clicking it is what turns the toggle on.
     addBgSettings.classList.toggle('hidden', !addBgToggle.checked);
     // Trimming needs transparency to find an edge, so it can't run under a solid fill.
-    autoTrim.disabled = addBgToggle.checked || !removeBgToggle.checked;
+    autoTrim.disabled = addBgToggle.checked || !(removeBgToggle.checked || aiBgToggle.checked);
+    const pro = !!(window.GP_PRO && GP_PRO.isPro());
+    aiSettings.classList.toggle('hidden', !(aiBgToggle.checked && pro));
 }
 removeBgToggle.addEventListener('change', () => { syncBgPanels(); requestChromaPreview(); });
 addBgToggle.addEventListener('change', syncBgPanels);
+
+// ============ AI background removal (Pro) ============
+document.querySelectorAll('[data-pro-price]').forEach(el => { if (window.GP_PRO) el.textContent = GP_PRO.price; });
+function aiEnabled() { return aiBgToggle.checked && !!(window.GP_PRO && GP_PRO.isPro()) && !!window.GP_AI; }
+aiBgToggle.addEventListener('change', () => {
+    const pro = !!(window.GP_PRO && GP_PRO.isPro());
+    if (aiBgToggle.checked && !pro) {
+        aiBgToggle.checked = false;
+        aiLocked.classList.remove('hidden');
+        aiLocked.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } else {
+        aiLocked.classList.add('hidden');
+    }
+    syncBgPanels();
+});
+if (window.GP_PRO) GP_PRO.onChange(() => { aiLocked.classList.add('hidden'); syncBgPanels(); });
+
+function aiProgressText(frac) {
+    return `Downloading the AI (${Math.round(frac * GP_AI.MODEL_MB)} of ${GP_AI.MODEL_MB} MB, one time only)…`;
+}
+async function loadAi() {
+    if (!GP_AI.loaded) aiStatus.textContent = aiProgressText(0);
+    await GP_AI.ensure(f => { aiStatus.textContent = aiProgressText(f); generateBtn.innerText = aiProgressText(f); });
+    aiStatus.textContent = GP_AI.provider === 'webgpu'
+        ? 'AI ready, running on your graphics card.'
+        : 'AI ready, running on your processor. This can take a few seconds per frame; Chrome or Edge on a computer with a graphics card is much faster.';
+}
+
+aiPreviewBtn.addEventListener('click', async () => {
+    if (!aiEnabled()) return;
+    if (sourceVideoPlayer.style.display === 'none' || !sourceVideoPlayer.videoWidth) {
+        aiStatus.textContent = 'Load a video first, then pause it on the frame you want to check.';
+        return;
+    }
+    aiPreviewBtn.disabled = true;
+    try {
+        await loadAi();
+        updateChromaPreview();
+        const pctx = chromaPreviewCanvas.getContext('2d', { willReadFrequently: true });
+        if (rawPreviewData) pctx.putImageData(rawPreviewData, 0, 0);
+        aiStatus.textContent = 'Cutting out this frame…';
+        const t0 = performance.now();
+        await GP_AI.cutOut(pctx, chromaPreviewCanvas.width, chromaPreviewCanvas.height, aiEdge.value);
+        if (removeBgToggle.checked) applyChromaKey(pctx, chromaPreviewCanvas.width, chromaPreviewCanvas.height, currentKeyOptions());
+        chromaPreviewMode.innerText = '(showing the AI cut-out)';
+        aiStatus.textContent = `Done in ${((performance.now() - t0) / 1000).toFixed(1)} s. The preview below shows the result.`;
+        chromaPreviewCanvas.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } catch (e) {
+        aiStatus.textContent = 'AI preview failed: ' + e.message;
+    } finally {
+        aiPreviewBtn.disabled = false;
+    }
+});
 syncBgPanels();
 
 // The "bake loop frames" choice only means anything once a loop mode is picked.
@@ -670,6 +731,10 @@ function growBounds(box, data, w, h, threshold = 8) {
 // ============ Process one frame -> Blob ============
 async function processFrameData(sourceElement, srcW, srcH, destW, destH, options) {
     const { w, h } = drawWithTransform(scratchCtx, sourceElement, srcW, srcH, destW, destH);
+    if (options.aiBg) {
+        generateBtn.innerText = `AI removing background: frame ${options.frameNum + 1} of ${options.totalFrames}`;
+        await GP_AI.cutOut(scratchCtx, w, h, options.aiEdge);
+    }
     if (options.removeBg) {
         applyChromaKey(scratchCtx, w, h, options.key);
     }
@@ -1159,12 +1224,15 @@ generateBtn.addEventListener('click', async () => {
 
         // Trimming needs somewhere to trim to: transparency from the chroma key, and no
         // solid fill painted back over it.
-        const wantTrim = autoTrim.checked && removeBgToggle.checked && !addBgToggle.checked;
+        const useAi = aiEnabled();
+        const wantTrim = autoTrim.checked && (removeBgToggle.checked || useAi) && !addBgToggle.checked;
         trimBox = wantTrim ? { x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity } : null;
         untrimmedSize = null;
 
         const options = {
             removeBg: removeBgToggle.checked,
+            aiBg: useAi,
+            aiEdge: aiEdge.value,
             addBg: addBgToggle.checked,
             addBgColorHex: addBgColor.value,
             key: currentKeyOptions(),
@@ -1174,6 +1242,8 @@ generateBtn.addEventListener('click', async () => {
             frameNum: 0,
             totalFrames: 1
         };
+
+        if (useAi) await loadAi();
 
         const scale = parseInt(webpScale.value) / 100;
         extractionScale = scale; // remember for future rebuilds
@@ -1267,6 +1337,8 @@ generateBtn.addEventListener('click', async () => {
         cancelBtn.innerText = 'Cancel';
         activeGif = null;
         progressBar.style.display = 'none';
+        // Lets batch mode (pro-tools.js) know this run has finished.
+        document.dispatchEvent(new CustomEvent('gp:processed'));
     }
 });
 // ============ Rebuild sprite sheet from cached frames (no re-decode) ============

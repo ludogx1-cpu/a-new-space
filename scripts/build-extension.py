@@ -17,7 +17,7 @@ PUB, SRC, OUT = ROOT / 'public', ROOT / 'extension-src', ROOT / 'dist' / 'extens
 
 PAGES = ['index.html', 'editor.html', 'how-to-use.html']
 DIRS = ['assets', 'vendor', 'showcase', 'fonts']
-SKIP = {'og-image.png'}  # only used for social sharing
+SKIP = {'og-image.png', 'ort', 'ai-bg.js', 'ai-worker.js', 'pro-page.js'}  # social image; AI engine (website and desktop only)
 
 if OUT.exists():
     shutil.rmtree(OUT)
@@ -33,6 +33,7 @@ for page in PAGES:
     # Remote/meta-only tags that make no sense inside an extension.
     html = re.sub(r'\s*<meta name="google-adsense-account"[^>]*>', '', html)
     html = re.sub(r'\s*<link rel="manifest"[^>]*>', '', html)
+    html = re.sub(r'\s*<script src="/assets/ai-bg\.js"></script>', '', html)
     if re.search(r'<script(?![^>]*\bsrc=)(?![^>]*application/ld\+json)[^>]*>', html):
         raise SystemExit(f'{page} has an inline script; MV3 extensions block those. Move it to a .js file.')
     if re.search(r'\son[a-z]+="', html):

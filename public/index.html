@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Video to Sprite Sheet, GIF &amp; Frame Converter | Golden Paw Animation Creation Tool</title>
     <meta name="description" content="Turn any video clip into a sprite sheet, animated GIF, or ZIP of frames with a TexturePacker JSON atlas. Remove green-screen backgrounds, trim, loop and export. Free, runs entirely in your browser, no uploads.">
-    <link rel="canonical" href="https://animate.goldenpaw.dog/">
+    <link rel="canonical" href="https://goldenpaw.dog/studios/animation/">
     <meta name="google-adsense-account" content="ca-pub-2047805482197197">
     <meta name="theme-color" content="#C9A227">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Golden Paw Animation Creation Tool">
     <meta property="og:title" content="Free Video to Sprite Sheet &amp; GIF Converter">
     <meta property="og:description" content="Video clip in, game-ready sprite sheet, GIF and JSON atlas out. Chroma key, trim, loop. 100% in your browser.">
-    <meta property="og:url" content="https://animate.goldenpaw.dog/">
-    <meta property="og:image" content="https://animate.goldenpaw.dog/assets/og-image.png">
+    <meta property="og:url" content="https://goldenpaw.dog/studios/animation/">
+    <meta property="og:image" content="https://goldenpaw.dog/studios/animation/assets/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/assets/paw-logo-192.png" type="image/png">
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -28,7 +28,7 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Golden Paw Animation Creation Tool",
-      "url": "https://animate.goldenpaw.dog/",
+      "url": "https://goldenpaw.dog/studios/animation/",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any (web browser)",
       "browserRequirements": "Requires a modern browser with JavaScript",
@@ -186,6 +186,15 @@
         /* v7 additions */
         .warn-box { padding: 10px 12px; background: rgba(220,53,69,0.10); border-left: 4px solid var(--danger); border-radius: 4px; margin-top: 12px; font-size: 0.9em; color: var(--text); }
         .warn-box.hidden, .hidden { display: none !important; }
+        .pro-badge { display: inline-block; font-size: 0.68em; font-weight: 800; letter-spacing: 0.08em; color: #1a1400; background: #c9a227; border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+        #aiPreviewBtn { background: var(--secondary); font-size: 0.9em; padding: 6px 12px; color: #fff; }
+        .preset-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 4px; }
+        .preset-row select { max-width: 100%; }
+        .preset-row input[type="text"] { padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text); flex: 1 1 140px; min-width: 0; }
+        button.small-btn { font-size: 0.9em; padding: 6px 12px; }
+        .batch-box { margin-top: 14px; padding: 10px 14px; border: 1px dashed var(--border); border-radius: 6px; }
+        .batch-box summary { cursor: pointer; }
+        .batch-box input[type="file"] { flex: 1 1 220px; width: auto; min-width: 0; }
         select { padding: 6px; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text); font-size: 0.95em; }
         .sub-setting { margin-top: 10px; }
         .sub-setting label { font-weight: bold; }
@@ -205,6 +214,7 @@
             <li><a href="/guides/">Guides</a></li>
             <li><a href="/how-to-use.html">How to use</a></li>
             <li><a href="/get-the-app.html">📲 Get the app</a></li>
+            <li><a href="/pro.html" class="nav-pro">⭐ Pro</a></li>
             <li><a href="https://goldenpaw.dog/studios/" rel="noopener">🐾 Golden Paw Studios</a></li>
             <li><a class="support-link" data-support hidden href="#" rel="noopener" target="_blank">☕ Support</a></li>
         </ul>
@@ -246,6 +256,16 @@
         <div class="setting-group">
             <input type="file" id="videoUpload" accept=".mp4,.webm,.mov,video/*,image/*" aria-label="Upload Video or Image" title="Upload Video or Image">
             <span class="desc">Select a Video (MP4, WebM, MOV) or Image (PNG, WebP). You can also drag &amp; drop a file anywhere on this panel.</span>
+
+            <details class="batch-box" id="batchBox">
+                <summary><strong>📦 Batch: convert many clips at once</strong> <span class="pro-badge">PRO</span></summary>
+                <span class="desc">Choose several videos. Each whole clip is processed with your settings below, and you get one ZIP with a folder per clip (sprite sheet, JSON and any other outputs you ticked).</span>
+                <div class="flex-row-center" style="margin-top:8px;">
+                    <input type="file" id="batchUpload" multiple accept=".mp4,.webm,.mov,video/*" aria-label="Choose clips for batch processing">
+                    <button type="button" id="batchBtn" class="small-btn" disabled>Process batch</button>
+                </div>
+                <span class="desc" id="batchStatus" role="status"></span>
+            </details>
 
             <video id="sourceVideoPlayer" controls></video>
             <div id="timeDisplayContainer">
@@ -306,6 +326,27 @@
             </div>
         </div>
 
+        <div class="setting-group setting-group-bg margin-top-15" id="aiGroup">
+            <label class="bold-pointer">
+                <input type="checkbox" id="aiBgToggle"> 🤖 AI background removal <span class="pro-badge">PRO</span>
+            </label>
+            <span class="desc">Cuts your character out of <strong>any</strong> background. No green screen needed. It runs on your own device: the first time, it downloads the AI (about 46&nbsp;MB), then it's saved for next time.</span>
+            <div id="aiSettings" class="bg-settings hidden">
+                <div class="flex-row-center margin-top-10-inline">
+                    <label for="aiEdge"><strong>Edges:</strong></label>
+                    <select id="aiEdge" title="How soft the cut-out edge is">
+                        <option value="soft">Soft (fur, hair, motion blur)</option>
+                        <option value="normal" selected>Normal</option>
+                        <option value="crisp">Crisp (cartoons, pixel art)</option>
+                    </select>
+                    <button id="aiPreviewBtn" type="button">👁 Preview on this frame</button>
+                </div>
+                <span class="desc" id="aiStatus" role="status"></span>
+                <span class="desc">Tip: if a little backdrop is left, also tick <em>Remove Background (Chroma Key)</em> below to clean it up.</span>
+            </div>
+            <div id="aiLocked" class="info-box hidden">⭐ AI background removal is part of <strong>Pro</strong>: one payment of <span data-pro-price>£11.99</span>, no subscription. <a href="/pro.html">See what's in Pro →</a></div>
+        </div>
+
         <div class="setting-group setting-group-bg margin-top-15">
             <label class="bold-pointer">
                 <input type="checkbox" id="removeBgToggle"> Remove Background (Chroma Key - Fast)
@@ -353,6 +394,15 @@
 
     <div class="panel">
         <h3>2. Output Formats (Tick all you need)</h3>
+
+        <div class="preset-row">
+            <label for="presetSelect"><strong>Presets:</strong></label>
+            <select id="presetSelect" title="Load a set of settings"></select>
+            <button type="button" id="presetDelete" class="small-btn" disabled>Delete</button>
+            <input type="text" id="presetName" maxlength="40" placeholder="Name your settings…" aria-label="Preset name">
+            <button type="button" id="presetSave" class="small-btn">Save current <span class="pro-badge">PRO</span></button>
+        </div>
+        <span class="desc" id="presetMsg" role="status"></span>
 
         <div class="checkbox-list">
             <div class="checkbox-item">
@@ -506,10 +556,13 @@
     </section>
 
     <footer class="site-footer">
-        <div><a href="/">Converter</a><a href="/editor.html">Sprite Editor</a><a href="/how-to-use.html">How to use</a><a href="/get-the-app.html">Get the app</a><a href="/guides/">Guides</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+        <div><a href="/">Converter</a><a href="/editor.html">Sprite Editor</a><a href="/how-to-use.html">How to use</a><a href="/get-the-app.html">Get the app</a><a href="/pro.html">Pro</a><a href="/guides/">Guides</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
         <div>© <span data-year>2026</span> <a href="https://goldenpaw.dog/studios/" rel="noopener">Golden Paw Studios</a>. The Animation Creation Tool processes everything on your device.</div>
     </footer>
 
+    <script src="/assets/pro.js"></script>
+    <script src="/assets/ai-bg.js"></script>
     <script src="/assets/converter.js"></script>
+    <script src="/assets/pro-tools.js"></script>
 </body>
 </html>

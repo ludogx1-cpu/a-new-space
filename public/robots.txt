@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://animate.goldenpaw.dog/sitemap.xml
+Sitemap: https://goldenpaw.dog/studios/animation/sitemap.xml

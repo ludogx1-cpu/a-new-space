@@ -1,0 +1,40 @@
+name: Build desktop app
+
+# Builds the Pro desktop app (Windows installer) from public/ + desktop/.
+# Run it from Actions → "Build desktop app" → Run workflow, or push a tag like desktop-v1.0.1.
+# Download the installer from the run's Artifacts and upload it to the Lemon Squeezy
+# product as a file, so Pro buyers get it with their licence key.
+on:
+  workflow_dispatch:
+  push:
+    tags: ['desktop-v*']
+  # Also build (as a check) on pull requests that change the desktop app or the tool.
+  pull_request:
+    paths: ['desktop/**', '.github/workflows/desktop.yml', '.gitattributes']
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - name: Check the website files first
+        run: python scripts/check.py
+      - name: Install
+        working-directory: desktop
+        run: npm ci
+      - name: Build the Windows installer
+        working-directory: desktop
+        run: npx electron-builder --win nsis --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Golden-Paw-Animation-Windows
+          path: desktop/dist/*.exe
+          if-no-files-found: error

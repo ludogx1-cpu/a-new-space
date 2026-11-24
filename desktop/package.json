@@ -1,0 +1,64 @@
+{
+  "name": "golden-paw-animation",
+  "productName": "Golden Paw Animation",
+  "version": "1.0.0",
+  "description": "Golden Paw Animation Creation Tool: video to sprite sheet, GIF and JSON atlas, with AI background removal. Desktop edition.",
+  "author": "Golden Paw Studios",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win nsis --publish never",
+    "dist:linux": "electron-builder --linux AppImage --publish never"
+  },
+  "devDependencies": {
+    "electron": "45.2.3",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "dog.goldenpaw.animate",
+    "productName": "Golden Paw Animation",
+    "copyright": "\u00a9 2026 Golden Paw Studios",
+    "files": [
+      "main.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../public",
+        "to": "site",
+        "filter": [
+          "**/*",
+          "!sitemap.xml",
+          "!robots.txt",
+          "!ads.txt"
+        ]
+      }
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png",
+      "category": "Graphics"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Golden Paw Animation",
+      "artifactName": "Golden-Paw-Animation-Setup-${version}.${ext}"
+    },
+    "appImage": {
+      "artifactName": "Golden-Paw-Animation-${version}.${ext}"
+    },
+    "publish": null
+  }
+}

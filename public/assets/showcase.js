@@ -5,8 +5,8 @@
  *   {
  *     "title": "Shiba run cycle",
  *     "caption": "Made from a 2-second clip",
- *     "image": "/showcase/shiba-run.png",
- *     "atlas": "/showcase/shiba-run.json",   // optional, TexturePacker JSON from the converter
+ *     "image": "shiba-run.png",
+ *     "atlas": "shiba-run.json",             // optional, TexturePacker JSON from the converter
  *     "cols": 4, "rows": 3,                  // only needed when there is no atlas
  *     "fps": 12                              // optional, the atlas fps is used otherwise
  *   }
@@ -96,11 +96,17 @@
         requestAnimationFrame(step);
     }
 
-    fetch('/showcase/showcase.json', { cache: 'no-cache' })
+    // Image and atlas paths in showcase.json are relative to that file, e.g. "shiba-run.png".
+    // (Older entries written as "/showcase/x.png" still work.)
+    const LIST = new URL('/showcase/showcase.json', location.href);
+    const resolve = p => new URL(String(p).replace(/^\/showcase\//, ''), LIST).pathname;
+    fetch(LIST.href, { cache: 'no-cache' })
         .then(function (r) { return r.ok ? r.json() : []; })
         .then(function (items) {
             if (!Array.isArray(items) || !items.length) return;
             return Promise.all(items.map(function (item) {
+                item.image = resolve(item.image);
+                if (item.atlas) item.atlas = resolve(item.atlas);
                 return Promise.all([
                     loadImage(item.image),
                     item.atlas ? fetch(item.atlas).then(function (r) { return r.json(); }) : null
