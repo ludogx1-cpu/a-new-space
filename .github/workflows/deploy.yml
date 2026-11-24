@@ -1,0 +1,90 @@
+name: Deploy Animation Tool
+
+# Publishes public/ to Firebase Hosting (site "gp-animate" in project
+# golden-paw-database, which serves animate.goldenpaw.dog).
+#  - push to main          -> checks, then deploys live
+#  - pull request          -> checks, then a private preview link is posted on the PR
+#  - "Run workflow" button -> checks, then deploys live
+# Needs one repository secret: FIREBASE_SERVICE_ACCOUNT (a service-account JSON key
+# for golden-paw-database). Until it exists the deploy steps are skipped.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+concurrency:
+  group: deploy-animate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pre-deploy checks (links, scripts, offline cache, library hashes, extension build)
+        run: python3 scripts/check.py
+      - name: Keep the extension package
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-paw-animate-extension
+          path: dist/golden-paw-animate-extension.zip
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    # Forked PRs can't read secrets, so don't try.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Check deploy key
+        id: key
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SA" ]; then
+            echo "::notice::FIREBASE_SERVICE_ACCOUNT secret is not set yet, so nothing was deployed. See LAUNCH.md."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.key.outputs.skip == 'false'
+
+      - name: Create the gp-animate hosting site if it doesn't exist
+        if: steps.key.outputs.skip == 'false'
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          if npx --yes firebase-tools@13 hosting:sites:get gp-animate --project golden-paw-database >/dev/null 2>&1; then
+            echo "Site gp-animate already exists."
+          else
+            npx --yes firebase-tools@13 hosting:sites:create gp-animate --project golden-paw-database \
+              || echo "::warning::Couldn't create the site automatically. Create it in the Firebase console: Hosting > Add another site > gp-animate."
+          fi
+          rm -f "$RUNNER_TEMP/sa.json"
+
+      - name: Deploy live
+        if: steps.key.outputs.skip == 'false' && github.event_name != 'pull_request'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: golden-paw-database
+          channelId: live
+
+      - name: Deploy a preview for this pull request
+        if: steps.key.outputs.skip == 'false' && github.event_name == 'pull_request'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: golden-paw-database
+          expires: 7d
