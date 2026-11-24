@@ -11,7 +11,8 @@ Live now: **https://goldenpaw.dog/studios/animation/** (the Animation Creation T
 - Pro built and tested: AI background removal (no green screen), batch processing, saved presets, no ads, Windows desktop app (installer builds on GitHub).
 
 ## 1. Finish launching Pro (£11.99 one-off)
-- [ ] **You:** merge ludogx1-cpu/a-new-space#4 (the Pro source code and desktop app; also redirects animate.goldenpaw.dog to the new address). The live site at /studios/animation already has Pro, with the buy button saying "opens soon" until the next step.
+- [x] **You:** merged ludogx1-cpu/a-new-space#4 (Pro source and desktop app; animate.goldenpaw.dog redirects to the new address).
+- [ ] **You:** merge ludogx1-cpu/a-new-space#5 so the bare animate.goldenpaw.dog home page redirects too.
 - [ ] **You:** Lemon Squeezy: create the store and a product "Golden Paw Animation Pro": single payment **£11.99**, **Generate licence keys** on, activation limit **3**.
 - [ ] **You:** send Claude the product's **Buy link** and **Product ID**. **Claude** switches on the buy button.
 - [ ] **You:** download the Windows installer (GitHub → Actions → *Build desktop app* → Artifacts) and upload it as a file on the Lemon Squeezy product.
@@ -37,11 +38,24 @@ Live now: **https://goldenpaw.dog/studios/animation/** (the Animation Creation T
 - [ ] **You:** post in r/gamedev, r/IndieDev, r/aivideo and r/godot; list on itch.io; share on Golden Paw socials.
 
 ## 5. Golden Paw: next ideas
-- [ ] **Add a new Dog Care page** to goldenpaw.dog, with helpful dog-care guides and tips.
-- [ ] **Advertise some products to sell** on it: pick dog-care products to feature, link them through the Golden Paw Shop or as affiliate links, and add them to the page.
+- [x] **Claude:** Dog Care page at goldenpaw.dog/dog-care/ with the Dog Care Planner and Starter Kit featured (ludogx1-cpu/gp-vault#12).
+- [ ] **You:** merge ludogx1-cpu/gp-vault#12.
+- [ ] **You (optional):** join Amazon Associates (or another affiliate scheme) and send Claude your links if you want recommended products (harnesses, beds, toys) on the Dog Care page.
+
+## 6. From the site review (Nov 2026)
+- [x] **Claude:** About and Studios pages now lead with the dog; GPAWS and optional DOGE explained once; older articles get a dated note; newsletter links to Studios services; Starter Kit business licence made clear (ludogx1-cpu/gp-vault#11).
+- [ ] **You:** merge ludogx1-cpu/gp-vault#11, then re-run *Publish newsletter article* (`news-2026-11`) so the live article gets the new link.
+- [ ] **You:** confirm the Starter Kit licence wording.
+- [ ] **You:** for each shop product, send its file type, page count, editing software (Canva, Word, PDF…) and 1–2 preview images. **Claude** adds them to the shop cards.
+- [ ] **Claude:** weekly Book Of Dog prompts with Goldie ("Show us your dog's sleepiest pose").
+- [ ] **Claude:** silent 3–5 second Shiba preview clip near the Adopt button (made with the Animation tool).
+- [x] **Claude:** sample website audit for a made-up groomer at /studios/services/sample-audit/ (ludogx1-cpu/gp-vault#12).
+- [x] **Claude:** Dog Walk Bingo (£2) printable made; listed in the shop as Coming soon.
+- [ ] **You:** create a Stripe Payment Link for Dog Walk Bingo (£2), with the PDF as the download, and paste the link into `web/studios/shop.js` (or send it to Claude).
+- [ ] **You pick, Claude builds:** more downloads. Suggested first: Dog Walk Bingo (£2), Sitter Pack (£4), personalised Golden Paw trading card (£6), Dog Show at Home party kit. Others: puppy first-year milestone cards, dog birthday kit, lost-dog poster maker, memorial print, phone wallpapers, Adventure Passport, Biscuit Robbery game, colouring page, trick cards, lead sleeves, lead and treat shelf plans, Letters from the Dog cards, streamer graphics.
 
 ## Later improvements (Claude)
 1. Very large sheets in the editor: warn above ~200 big frames (memory).
 2. Test on iPhone/Safari specifically.
 3. Firefox version of the extension.
-4. More guides for Google traffic: "AI video to game sprite", "GIF with a transparent background", "Godot sprite sheet import".
+4. ~~More guides~~ Done: AI video to game sprite, transparent GIF, Godot 4 import.

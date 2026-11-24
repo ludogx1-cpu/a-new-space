@@ -22,7 +22,7 @@ async function blobInfo(page, sel) {
 (async () => {
   const browser = await chromium.launch();
   // ---------- 1. every page, desktop + phone ----------
-  const pages = ['/', '/editor.html', '/how-to-use.html', '/get-the-app.html', '/guides/', '/guides/video-to-sprite-sheet.html', '/guides/remove-green-screen.html', '/guides/phaser-pixi-sprite-sheet.html', '/about.html', '/contact.html', '/privacy.html', '/terms.html', '/404.html'];
+  const pages = ['/', '/editor.html', '/how-to-use.html', '/get-the-app.html', '/guides/', '/guides/video-to-sprite-sheet.html', '/guides/remove-green-screen.html', '/guides/phaser-pixi-sprite-sheet.html', '/guides/ai-video-to-game-sprite.html', '/guides/transparent-gif.html', '/guides/godot-sprite-sheet.html', '/about.html', '/contact.html', '/privacy.html', '/terms.html', '/404.html'];
   for (const [label, vp] of [['desktop', { width: 1280, height: 900 }], ['phone', { width: 390, height: 844 }]]) {
     const ctx = await browser.newContext({ viewport: vp });
     const p = await ctx.newPage();
