@@ -1,0 +1,19 @@
+Golden Paw Animation Creation Tool: AI plugin (MCP server)
+Copyright (c) 2026 Golden Paw Studios. All rights reserved.
+
+You may install and use this software free of charge, for personal and commercial
+projects. Anything you make with it is yours.
+
+AI background removal is a Pro feature and needs a Golden Paw Animation Pro licence
+key (https://goldenpaw.dog/studios/animation/pro.html). Please don't remove or get
+around the licence check, and don't redistribute modified copies of this software.
+
+This software is provided "as is", without warranty of any kind. Golden Paw Studios
+is not liable for any claim, damages or other liability arising from its use.
+
+Third-party components, each under its own licence:
+- ffmpeg (via the ffmpeg-static package): GPL. It runs as a separate program.
+- IS-Net background-removal model: Apache License 2.0
+  (https://github.com/xuebinqin/DIS). Downloaded on first use of AI features.
+- ONNX Runtime Web: MIT. Downloaded on first use of AI features.
+- @modelcontextprotocol/sdk, zod, pngjs, gifenc: MIT.

@@ -29,7 +29,7 @@ TEXT = {'.html', '.js', '.css', '.json', '.webmanifest', '.xml', '.txt', '.mjs'}
 # Root-relative paths the tool uses. A quote (or "(") followed by "/" and one of these.
 TOOL_PATH = re.compile(
     r'''(?P<q>["'(`])/(?=(?:assets|vendor|fonts|models|showcase|guides)/'''
-    r'''|(?:index|editor|how-to-use|get-the-app|pro|about|contact|privacy|terms|404)\.html'''
+    r'''|(?:index|editor|how-to-use|get-the-app|ai-plugin|pro|about|contact|privacy|terms|404)\.html'''
     r'''|sw\.js|site\.webmanifest|\?|(?P=q))''')
 
 if OUT.exists():

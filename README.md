@@ -13,3 +13,13 @@ Preview locally:
 ```bash
 cd public && python3 -m http.server 8000
 ```
+
+## AI plugin (Claude and other MCP apps)
+
+`mcp/` is the same tool as an MCP server, so AI assistants can run it on the user's computer. Install in Claude Code:
+
+```
+/plugin install golden-paw-animate --marketplace ludogx1-cpu/a-new-space
+```
+
+Details, Claude Desktop set-up and settings: [mcp/README.md](mcp/README.md). Install page: https://goldenpaw.dog/studios/animation/ai-plugin.html

@@ -1,0 +1,65 @@
+name: AI plugin (MCP)
+
+# Tests the Golden Paw Animate MCP plugin on every change to mcp/, and publishes it
+# to npm when run by hand ("Run workflow" with publish ticked) on main.
+# Publishing needs a repository secret NPM_TOKEN (npmjs.com → Access Tokens →
+# Generate New Token → Granular, with read and write access to packages).
+on:
+  push:
+    branches: [main]
+    paths: ['mcp/**', '.claude-plugin/**', '.github/workflows/mcp.yml']
+  pull_request:
+    paths: ['mcp/**', '.claude-plugin/**', '.github/workflows/mcp.yml']
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish this version to npm (needs the NPM_TOKEN secret)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: mcp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+
+  publish:
+    needs: test
+    if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # npm provenance: shows the package was built from this repo
+    defaults:
+      run:
+        working-directory: mcp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Check the NPM_TOKEN secret is set
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then echo "::error::Add the NPM_TOKEN repository secret first (see the top of this workflow)."; exit 1; fi
+      - run: npm ci --no-audit --no-fund
+      - run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
