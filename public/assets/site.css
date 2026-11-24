@@ -81,3 +81,26 @@ body, body.content-page { font-family: 'Inter', system-ui, sans-serif; }
 h1, h2, h3, .site-nav .brand, .showcase h2 { font-family: 'Outfit', 'Inter', system-ui, sans-serif; letter-spacing: -0.01em; }
 .article pre { overflow-x: auto; max-width: 100%; background: var(--accent-softer); border: 1px solid var(--border-soft); border-radius: 6px; padding: 12px 14px; font-size: 0.88em; line-height: 1.5; }
 .article pre code { background: none; padding: 0; }
+
+/* Pro */
+.pro-badge { display: inline-block; font-size: 0.7em; font-weight: 800; letter-spacing: 0.08em; color: #1a1400; background: #c9a227; border-radius: 999px; padding: 2px 9px; vertical-align: middle; }
+.pro-kicker { margin: 0 0 4px; }
+.site-nav a.nav-pro { color: var(--accent); font-weight: 700; }
+.pro-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 16px; margin: 18px 0 8px; }
+@media (max-width: 640px) { .pro-grid { grid-template-columns: 1fr; } }
+.pro-col { border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; background: var(--accent-softer); min-width: 0; }
+.pro-col h2 { margin-top: 0; font-size: 1.2em; }
+.pro-col-main { border: 2px solid var(--gold); box-shadow: 0 6px 24px rgba(201,162,39,0.18); }
+.pro-price { font-size: 0.75em; color: var(--text); font-weight: 600; margin-left: 6px; }
+ul.ticks { list-style: none; padding: 0; margin: 0; }
+ul.ticks li { padding: 5px 0 5px 1.6em; position: relative; }
+ul.ticks li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: 800; }
+.key-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.key-form input { flex: 1 1 280px; min-width: 0; padding: 11px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--panel); color: var(--text); font: 0.95em ui-monospace, monospace; }
+.key-form button.cta { border: none; cursor: pointer; font-size: 1em; margin: 0; }
+.cta-disabled { background: var(--border) !important; color: var(--muted) !important; cursor: default; }
+.link-btn { background: none; border: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 0; font: inherit; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Footer links wrap cleanly on narrow screens (gaps instead of side margins). */
+.site-footer > div:first-child { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; }
+.site-footer > div:first-child a { margin: 0; }

@@ -25,6 +25,16 @@ window.SITE_CONFIG = {
     // Optional tip jar (Ko-fi, Buy Me a Coffee, Stripe Payment Link...). Empty = hidden.
     supportUrl: '',
 
+    // Pro (one-off purchase, sold through Lemon Squeezy, which also handles VAT).
+    // checkoutUrl: the product's "Buy" link, e.g. https://goldenpawstudios.lemonsqueezy.com/buy/xxxx
+    // productId:   the number shown on the product page in Lemon Squeezy (stops keys
+    //              for other products unlocking Pro). Leave empty while testing.
+    pro: {
+        price: '£11.99',
+        checkoutUrl: '',
+        productId: ''
+    },
+
     // Shown on the Contact page. Use a dedicated address, not your personal one.
     contactEmail: 'goldenpaw.dogeadmin@gmail.com'
 };
@@ -35,7 +45,13 @@ window.SITE_CONFIG = {
     // permitted in extension pages), so ads, analytics and the service worker are off.
     var isExtension = /^(chrome|moz|safari-web)-extension:$/.test(location.protocol);
     window.GP_IS_EXTENSION = isExtension;
-    var hasAds = !isExtension && /^ca-pub-\d{16}$/.test(cfg.adsenseClient || '');
+    // Pro customers never see ads (same check as pro.js, done early so no ad script loads).
+    var isPro = false;
+    try {
+        var pro = JSON.parse(localStorage.getItem('gp-pro') || 'null');
+        isPro = !!(pro && pro.key && pro.instanceId && (Date.now() - (pro.checkedAt || 0)) / 864e5 <= 30);
+    } catch (e) { /* storage blocked: treat as free */ }
+    var hasAds = !isExtension && !isPro && /^ca-pub-\d{16}$/.test(cfg.adsenseClient || '');
 
     // Theme: share the tool's saved preference across every page.
     try {
@@ -139,6 +155,9 @@ window.SITE_CONFIG = {
                 if (!bundled.test(u.pathname)) { a.href = 'https://animate.goldenpaw.dog' + u.pathname + u.search + u.hash; a.target = '_blank'; a.rel = 'noopener'; }
             });
             document.querySelectorAll('[data-install]').forEach(function (b) { b.remove(); });
+            // The extension is the free, ad-free edition: Pro and its AI live on the website and desktop app.
+            var ai = document.getElementById('aiGroup'); if (ai) ai.remove();
+            document.querySelectorAll('a.nav-pro').forEach(function (a) { a.closest('li').remove(); });
         }
 
         // Footer year

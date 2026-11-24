@@ -186,6 +186,8 @@
         /* v7 additions */
         .warn-box { padding: 10px 12px; background: rgba(220,53,69,0.10); border-left: 4px solid var(--danger); border-radius: 4px; margin-top: 12px; font-size: 0.9em; color: var(--text); }
         .warn-box.hidden, .hidden { display: none !important; }
+        .pro-badge { display: inline-block; font-size: 0.68em; font-weight: 800; letter-spacing: 0.08em; color: #1a1400; background: #c9a227; border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+        #aiPreviewBtn { background: var(--secondary); font-size: 0.9em; padding: 6px 12px; color: #fff; }
         select { padding: 6px; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text); font-size: 0.95em; }
         .sub-setting { margin-top: 10px; }
         .sub-setting label { font-weight: bold; }
@@ -205,6 +207,7 @@
             <li><a href="/guides/">Guides</a></li>
             <li><a href="/how-to-use.html">How to use</a></li>
             <li><a href="/get-the-app.html">📲 Get the app</a></li>
+            <li><a href="/pro.html" class="nav-pro">⭐ Pro</a></li>
             <li><a href="https://goldenpaw.dog/studios/" rel="noopener">🐾 Golden Paw Studios</a></li>
             <li><a class="support-link" data-support hidden href="#" rel="noopener" target="_blank">☕ Support</a></li>
         </ul>
@@ -304,6 +307,27 @@
                 </div>
                 <span class="desc" id="transformDesc">No transform applied.</span>
             </div>
+        </div>
+
+        <div class="setting-group setting-group-bg margin-top-15" id="aiGroup">
+            <label class="bold-pointer">
+                <input type="checkbox" id="aiBgToggle"> 🤖 AI background removal <span class="pro-badge">PRO</span>
+            </label>
+            <span class="desc">Cuts your character out of <strong>any</strong> background. No green screen needed. It runs on your own device: the first time, it downloads the AI (about 46&nbsp;MB), then it's saved for next time.</span>
+            <div id="aiSettings" class="bg-settings hidden">
+                <div class="flex-row-center margin-top-10-inline">
+                    <label for="aiEdge"><strong>Edges:</strong></label>
+                    <select id="aiEdge" title="How soft the cut-out edge is">
+                        <option value="soft">Soft (fur, hair, motion blur)</option>
+                        <option value="normal" selected>Normal</option>
+                        <option value="crisp">Crisp (cartoons, pixel art)</option>
+                    </select>
+                    <button id="aiPreviewBtn" type="button">👁 Preview on this frame</button>
+                </div>
+                <span class="desc" id="aiStatus" role="status"></span>
+                <span class="desc">Tip: if a little backdrop is left, also tick <em>Remove Background (Chroma Key)</em> below to clean it up.</span>
+            </div>
+            <div id="aiLocked" class="info-box hidden">⭐ AI background removal is part of <strong>Pro</strong>: one payment of <span data-pro-price>£11.99</span>, no subscription. <a href="/pro.html">See what's in Pro →</a></div>
         </div>
 
         <div class="setting-group setting-group-bg margin-top-15">
@@ -506,10 +530,12 @@
     </section>
 
     <footer class="site-footer">
-        <div><a href="/">Converter</a><a href="/editor.html">Sprite Editor</a><a href="/how-to-use.html">How to use</a><a href="/get-the-app.html">Get the app</a><a href="/guides/">Guides</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+        <div><a href="/">Converter</a><a href="/editor.html">Sprite Editor</a><a href="/how-to-use.html">How to use</a><a href="/get-the-app.html">Get the app</a><a href="/pro.html">Pro</a><a href="/guides/">Guides</a><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
         <div>© <span data-year>2026</span> <a href="https://goldenpaw.dog/studios/" rel="noopener">Golden Paw Studios</a>. The Animation Creation Tool processes everything on your device.</div>
     </footer>
 
+    <script src="/assets/pro.js"></script>
+    <script src="/assets/ai-bg.js"></script>
     <script src="/assets/converter.js"></script>
 </body>
 </html>
