@@ -1,0 +1,11 @@
+# Keep files byte-for-byte identical on every platform (Windows checkouts would
+# otherwise switch text files to CRLF, which changes the vendor libraries'
+# verified hashes and breaks scripts/check.py on the Windows desktop build).
+* text=auto eol=lf
+public/vendor/** -text
+*.onnx binary
+*.wasm binary
+*.png binary
+*.webm binary
+*.woff2 binary
+*.zip binary

@@ -10,7 +10,7 @@ on:
     tags: ['desktop-v*']
   # Also build (as a check) on pull requests that change the desktop app or the tool.
   pull_request:
-    paths: ['desktop/**', '.github/workflows/desktop.yml']
+    paths: ['desktop/**', '.github/workflows/desktop.yml', '.gitattributes']
 
 permissions:
   contents: read
