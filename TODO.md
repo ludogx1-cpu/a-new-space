@@ -54,6 +54,14 @@ Live now: **https://goldenpaw.dog/studios/animation/** (the Animation Creation T
 - [ ] **You:** create a Stripe Payment Link for Dog Walk Bingo (£2), with the PDF as the download, and paste the link into `web/studios/shop.js` (or send it to Claude).
 - [ ] **You pick, Claude builds:** more downloads. Suggested first: Dog Walk Bingo (£2), Sitter Pack (£4), personalised Golden Paw trading card (£6), Dog Show at Home party kit. Others: puppy first-year milestone cards, dog birthday kit, lost-dog poster maker, memorial print, phone wallpapers, Adventure Passport, Biscuit Robbery game, colouring page, trick cards, lead sleeves, lead and treat shelf plans, Letters from the Dog cards, streamer graphics.
 
+## 7. AI plugin (Claude / MCP)
+- [x] **Claude:** built and tested the plugin (`mcp/`): video → sprite sheet / JSON / GIF / frames, slice sheets, free green-screen removal, Pro AI background removal, Pro licence activation. Installs in Claude Code from this repo. Install page: /studios/animation/ai-plugin.html.
+- [ ] **You:** merge the AI plugin pull request. Claude then copies the new install page to goldenpaw.dog.
+- [ ] **You:** create a free npmjs.com account, make an access token (Access Tokens → Generate New Token → Granular, read and write), and add it to this repo as the secret `NPM_TOKEN` (Settings → Secrets and variables → Actions). Then Actions → *AI plugin (MCP)* → Run workflow, tick **publish**. This makes the Claude Desktop instructions (`npx golden-paw-animate-mcp`) work.
+- [ ] **You:** once Lemon Squeezy is set up, send Claude the Product ID: it goes in `mcp/src/pro.js` as well as `site.js`.
+- [ ] **You (later):** submit to Anthropic's plugin/connector directory and other MCP directories once it has a few users. Claude can prepare the listing text.
+- [ ] **You:** decide the licence. The plugin currently says "free to use, all rights reserved" (`mcp/LICENSE`); say if you'd prefer open source (e.g. MIT).
+
 ## Later improvements (Claude)
 1. Very large sheets in the editor: warn above ~200 big frames (memory).
 2. Test on iPhone/Safari specifically.

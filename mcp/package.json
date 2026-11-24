@@ -1,0 +1,50 @@
+{
+  "name": "golden-paw-animate-mcp",
+  "version": "1.0.0",
+  "description": "Golden Paw Animation Creation Tool for AI assistants (MCP): turn video into game sprite sheets, JSON atlases and transparent GIFs, with green-screen and AI background removal. Runs on your own computer.",
+  "type": "module",
+  "bin": {
+    "golden-paw-animate-mcp": "src/server.js"
+  },
+  "main": "src/server.js",
+  "files": [
+    "src",
+    "launch.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node test/smoke.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "sprite-sheet",
+    "spritesheet",
+    "gif",
+    "green-screen",
+    "background-removal",
+    "game-dev",
+    "texturepacker"
+  ],
+  "homepage": "https://goldenpaw.dog/studios/animation/ai-plugin.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ludogx1-cpu/a-new-space.git",
+    "directory": "mcp"
+  },
+  "author": "Golden Paw Studios",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "ffmpeg-static": "5.3.0",
+    "gifenc": "1.0.3",
+    "pngjs": "7.0.0",
+    "zod": "3.25.76"
+  }
+}
