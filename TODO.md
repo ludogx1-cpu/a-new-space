@@ -56,3 +56,9 @@ Tick items off as you go. **You** = needs your accounts or your decision. **Clau
 5. **Store listing assets:** screenshots, a short promo tile (440×280) and a description for the Chrome Web Store.
 6. **Firefox extension:** needs a small manifest variant.
 7. **More guides:** each new guide is another way in from Google. Ideas: "AI video to game sprite", "make a GIF with a transparent background", "Godot sprite sheet import".
+
+---
+
+## Golden Paw: next ideas
+- [ ] **Add a new Dog Care page** to goldenpaw.dog, with helpful dog-care guides and tips.
+- [ ] **Advertise some products to sell** on it: pick dog-care products to feature, link them through the Golden Paw Shop or as affiliate links, and add them to the page.
