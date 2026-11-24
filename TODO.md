@@ -11,7 +11,7 @@ Live now: **https://goldenpaw.dog/studios/animation/** (the Animation Creation T
 - Pro built and tested: AI background removal (no green screen), batch processing, saved presets, no ads, Windows desktop app (installer builds on GitHub).
 
 ## 1. Finish launching Pro (£11.99 one-off)
-- [ ] **You:** merge ludogx1-cpu/a-new-space#4 (Pro, AI, batch, presets, desktop app; also redirects animate.goldenpaw.dog to the new address). **Claude** then copies the update into goldenpaw.dog.
+- [ ] **You:** merge ludogx1-cpu/a-new-space#4 (the Pro source code and desktop app; also redirects animate.goldenpaw.dog to the new address). The live site at /studios/animation already has Pro, with the buy button saying "opens soon" until the next step.
 - [ ] **You:** Lemon Squeezy: create the store and a product "Golden Paw Animation Pro": single payment **£11.99**, **Generate licence keys** on, activation limit **3**.
 - [ ] **You:** send Claude the product's **Buy link** and **Product ID**. **Claude** switches on the buy button.
 - [ ] **You:** download the Windows installer (GitHub → Actions → *Build desktop app* → Artifacts) and upload it as a file on the Lemon Squeezy product.
