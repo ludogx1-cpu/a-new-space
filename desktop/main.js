@@ -47,7 +47,7 @@ function createWindow() {
         autoHideMenuBar: true,
         webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false }
     });
-    // Links to websites (Golden Paw, Lemon Squeezy, guides online) open in the normal browser.
+    // Links to websites (Golden Paw, Polar checkout, guides online) open in the normal browser.
     win.webContents.setWindowOpenHandler(({ url }) => {
         if (url.startsWith('app://')) return { action: 'allow' };
         if (/^https?:\/\//.test(url)) shell.openExternal(url);

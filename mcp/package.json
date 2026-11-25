@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "start": "node src/server.js",
-    "test": "node test/smoke.js"
+    "test": "node test/smoke.js && node test/licence.js"
   },
   "engines": {
     "node": ">=20"

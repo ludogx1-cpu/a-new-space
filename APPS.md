@@ -65,7 +65,7 @@ The `desktop/` folder wraps the same tool in Electron. It runs from a private `a
 **Build the installer (no console needed):**
 1. GitHub → **Actions** → **Build desktop app** → **Run workflow**.
 2. When it finishes (about 10 minutes), open the run and download **Golden-Paw-Animation-Windows** under *Artifacts*. Inside is `Golden-Paw-Animation-Setup-1.0.0.exe`.
-3. In Lemon Squeezy, open the Pro product → **Files** → upload the `.exe`. Buyers then get a download link in their purchase email, next to their licence key.
+3. In Polar, open **Products → Benefits → Create benefit → File Downloads**, upload the `.exe`, then switch that benefit on for the Pro product. Buyers can then download it from their Polar purchases, next to their licence key.
 
 To release an update, raise `"version"` in `desktop/package.json` and run the workflow again.
 
