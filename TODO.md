@@ -11,11 +11,12 @@ Live now: **https://goldenpaw.dog/studios/animation/** (the Animation Creation T
 - Pro built and tested: AI background removal (no green screen), batch processing, saved presets, no ads, Windows desktop app (installer builds on GitHub).
 
 ## 1. Finish launching Pro (£11.99 one-off)
+- [ ] **You:** Polar: verify your identity (photo ID) so payouts can start, and wait for Polar's account review (up to 14 days).
 - [x] **You:** merged ludogx1-cpu/a-new-space#4 (Pro source and desktop app; animate.goldenpaw.dog redirects to the new address).
 - [ ] **You:** merge ludogx1-cpu/a-new-space#5 so the bare animate.goldenpaw.dog home page redirects too.
-- [ ] **You:** Lemon Squeezy: create the store and a product "Golden Paw Animation Pro": single payment **£11.99**, **Generate licence keys** on, activation limit **3**.
-- [ ] **You:** send Claude the product's **Buy link** and **Product ID**. **Claude** switches on the buy button.
-- [ ] **You:** download the Windows installer (GitHub → Actions → *Build desktop app* → Artifacts) and upload it as a file on the Lemon Squeezy product.
+- [x] **You:** Polar (Lemon Squeezy closed to new stores): organisation, product "Golden Paw Animation Pro" £11.99, licence-key benefit (GPAW, 3 devices), checkout link.
+- [x] **Claude:** switched the website, desktop app and AI plugin to Polar licence keys; Buy button live.
+- [ ] **You:** download the Windows installer (GitHub → Actions → *Build desktop app* → Artifacts) and add it to the Pro product in Polar as a **File Downloads** benefit.
 - [ ] **You (later):** code-signing certificate to remove Windows' "unknown publisher" warning, once sales justify it.
 
 ## 2. Ads and Google
@@ -58,7 +59,7 @@ Live now: **https://goldenpaw.dog/studios/animation/** (the Animation Creation T
 - [x] **Claude:** built and tested the plugin (`mcp/`): video → sprite sheet / JSON / GIF / frames, slice sheets, free green-screen removal, Pro AI background removal, Pro licence activation. Installs in Claude Code from this repo. Install page: /studios/animation/ai-plugin.html.
 - [ ] **You:** merge the AI plugin pull request. Claude then copies the new install page to goldenpaw.dog.
 - [ ] **You:** create a free npmjs.com account, make an access token (Access Tokens → Generate New Token → Granular, read and write), and add it to this repo as the secret `NPM_TOKEN` (Settings → Secrets and variables → Actions). Then Actions → *AI plugin (MCP)* → Run workflow, tick **publish**. This makes the Claude Desktop instructions (`npx golden-paw-animate-mcp`) work.
-- [ ] **You:** once Lemon Squeezy is set up, send Claude the Product ID: it goes in `mcp/src/pro.js` as well as `site.js`.
+- [x] **Claude:** the AI plugin uses the same Polar licence check as the website.
 - [ ] **You (later):** submit to Anthropic's plugin/connector directory and other MCP directories once it has a few users. Claude can prepare the listing text.
 - [ ] **You:** decide the licence. The plugin currently says "free to use, all rights reserved" (`mcp/LICENSE`); say if you'd prefer open source (e.g. MIT).
 

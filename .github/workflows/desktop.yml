@@ -2,7 +2,7 @@ name: Build desktop app
 
 # Builds the Pro desktop app (Windows installer) from public/ + desktop/.
 # Run it from Actions → "Build desktop app" → Run workflow, or push a tag like desktop-v1.0.1.
-# Download the installer from the run's Artifacts and upload it to the Lemon Squeezy
+# Download the installer from the run's Artifacts and upload it to the Polar
 # product as a file, so Pro buyers get it with their licence key.
 on:
   workflow_dispatch:

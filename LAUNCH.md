@@ -5,10 +5,10 @@
 > and copy `dist/subpath/` into gp-vault `web/studios/animation/` (Claude can do this and open the pull request).
 > animate.goldenpaw.dog redirects to the new address (see `firebase.json`).
 >
-> **Pro setup (one time, in Lemon Squeezy):**
-> 1. Create a store at https://app.lemonsqueezy.com (Lemon Squeezy is merchant of record: it handles VAT).
-> 2. New product: "Golden Paw Animation Pro", single payment, **£11.99**, tick **Generate licence keys**, activation limit **3**.
-> 3. Copy the product's **Buy link** and **Product ID** into `public/assets/site.js` → `SITE_CONFIG.pro` (`checkoutUrl`, `productId`), or send them to Claude.
+> **Pro setup (done, in Polar):**
+> 1. Polar (polar.sh) is merchant of record: it takes the payment and handles VAT. Organisation "Golden Paw Studios".
+> 2. Product "Golden Paw Animation Pro", one-time **£11.99**, with a **License Keys** benefit (prefix GPAW, 3 activations, never expires, visible to customers).
+> 3. The checkout link, organisation ID and benefit ID are in `public/assets/site.js` → `SITE_CONFIG.pro` and `mcp/src/pro.js` → `PRO`. None of them are secret.
 
 The tool is a static site in `public/`, with no server and no build step. It lives at **`animate.goldenpaw.dog`**, a section of goldenpaw.dog that runs separately from the Golden Paw app, so nothing in the app's code has to change. Visitors' videos never leave their browsers, so hosting costs almost nothing.
 
