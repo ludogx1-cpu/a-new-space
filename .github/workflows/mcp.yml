@@ -4,17 +4,18 @@ name: AI plugin (MCP)
 # to npm when run by hand ("Run workflow" with publish ticked) on main.
 # Publishing uses npm trusted publishing (no token): on npmjs.com, the package's
 # Settings → Trusted Publisher → GitHub Actions is set to ludogx1-cpu / a-new-space /
-# mcp.yml. Raise "version" in mcp/package.json before each publish.
+# mcp.yml. Before each publish, raise the version in mcp/package.json and, to match,
+# in plugins/golden-paw-animate (plugin.json and start.js) and .claude-plugin/marketplace.json.
 on:
   push:
     branches: [main]
-    paths: ['mcp/**', '.claude-plugin/**', '.github/workflows/mcp.yml']
+    paths: ['mcp/**', 'plugins/**', '.claude-plugin/**', '.github/workflows/mcp.yml']
   pull_request:
-    paths: ['mcp/**', '.claude-plugin/**', '.github/workflows/mcp.yml']
+    paths: ['mcp/**', 'plugins/**', '.claude-plugin/**', '.github/workflows/mcp.yml']
   workflow_dispatch:
     inputs:
       publish:
-        description: "Publish this version to npm (needs the NPM_TOKEN secret)"
+        description: "Publish this version to npm"
         type: boolean
         default: false
 
@@ -38,6 +39,8 @@ jobs:
           node-version: '22'
       - run: npm ci --no-audit --no-fund
       - run: npm test
+      # The Claude plugin folder starts this package the way Claude does (on each OS).
+      - run: node test/plugin.js --local
 
   publish:
     needs: test
