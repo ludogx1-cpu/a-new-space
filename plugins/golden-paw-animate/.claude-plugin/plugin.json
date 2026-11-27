@@ -1,7 +1,7 @@
 {
   "name": "golden-paw-animate",
   "displayName": "Golden Paw Animate",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Turn video into game sprite sheets, JSON atlases and transparent GIFs, with free green-screen removal and AI background removal (Pro). Runs on your own computer: your videos are never uploaded.",
   "author": {
     "name": "Golden Paw Studios",
