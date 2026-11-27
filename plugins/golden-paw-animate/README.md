@@ -60,7 +60,7 @@ Golden Paw Animate doesn't collect, store or share your videos, images or prompt
 - **"Could not start":**
   1. Install Node.js 20 or newer.
   2. Restart Claude.
-  3. Run `npx --yes golden-paw-animate-mcp@1.0.1` in a terminal to see the full error.
+  3. Run `npx --yes golden-paw-animate-mcp@1.0.2` in a terminal to see the full error.
 - **"Can't find the video":** Give Claude the full path to the file.
 - **Background left behind, or holes in the subject:**
   - Ask Claude to raise the `chroma_key` tolerance (background left behind) or lower it (holes).

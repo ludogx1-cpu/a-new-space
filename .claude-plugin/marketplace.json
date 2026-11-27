@@ -12,7 +12,7 @@
       "name": "golden-paw-animate",
       "source": "./plugins/golden-paw-animate",
       "description": "Golden Paw Animation Creation Tool: video to sprite sheet, JSON atlas and transparent GIF, with green-screen and AI background removal.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "category": "design",
       "homepage": "https://goldenpaw.dog/studios/animation/ai-plugin.html"
     }

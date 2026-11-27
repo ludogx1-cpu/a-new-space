@@ -6,7 +6,7 @@
 // This file only starts it; Claude talks to the server over stdin/stdout.
 import { spawn } from 'node:child_process';
 
-const PACKAGE = process.env.GOLDEN_PAW_PLUGIN_PACKAGE || 'golden-paw-animate-mcp@1.0.1';
+const PACKAGE = process.env.GOLDEN_PAW_PLUGIN_PACKAGE || 'golden-paw-animate-mcp@1.0.2';
 const win = process.platform === 'win32';
 
 const child = spawn(win ? 'npx.cmd' : 'npx', ['--yes', PACKAGE], {

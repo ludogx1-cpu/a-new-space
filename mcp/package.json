@@ -1,6 +1,6 @@
 {
   "name": "golden-paw-animate-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Golden Paw Animation Creation Tool for AI assistants (MCP): turn video into game sprite sheets, JSON atlases and transparent GIFs, with green-screen and AI background removal. Runs on your own computer.",
   "type": "module",
   "bin": {
@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "start": "node src/server.js",
-    "test": "node test/smoke.js && node test/licence.js"
+    "test": "node test/smoke.js && node test/licence.js && node test/specks.js"
   },
   "engines": {
     "node": ">=20"
