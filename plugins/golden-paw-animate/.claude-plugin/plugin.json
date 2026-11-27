@@ -18,12 +18,5 @@
     "background-removal",
     "game-dev",
     "animation"
-  ],
-  "network": {
-    "hosts": [
-      "registry.npmjs.org",
-      "goldenpaw.dog",
-      "api.polar.sh"
-    ]
-  }
+  ]
 }
