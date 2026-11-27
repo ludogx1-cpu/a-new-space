@@ -35,6 +35,8 @@ const { tools } = await client.listTools();
 const names = tools.map(t => t.name).sort();
 check('tools listed', ['activate_pro', 'convert_video', 'make_gif', 'remove_background', 'slice_spritesheet'].every(n => names.includes(n)), names.join(', '));
 
+check('every tool has a title and safety annotations', tools.every(t => t.title && t.annotations && typeof t.annotations.readOnlyHint === 'boolean' && typeof t.annotations.destructiveHint === 'boolean'));
+
 const text = r => r.content.filter(c => c.type === 'text').map(c => c.text).join('\n');
 
 // 1. Video → sheet + JSON + GIF + frames, with auto green-screen removal.

@@ -8,6 +8,9 @@ import { readFileSync } from 'node:fs';
 import { convertVideo, makeGif, sliceSpritesheet, removeBackgroundTool, pngBase64 } from './tools.js';
 import * as pro from './pro.js';
 
+// Tool annotations (MCP hints for the AI app): every tool writes new files on this computer
+// (by default in a new "<name>-sprites" style folder) and never deletes or edits the originals. openWorldHint is true where the tool can go
+// online: the one-time AI model download (Pro) and the Polar licence check.
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const server = new McpServer({ name: 'golden-paw-animate', version: pkg.version });
 
@@ -34,6 +37,7 @@ const timing = {
 server.registerTool('convert_video', {
     title: 'Video to sprite sheet',
     description: 'Turn a video (or animated GIF) into a game-ready sprite sheet PNG plus a TexturePacker JSON Hash atlas (works with Phaser, PixiJS, Godot, Unity importers and more), and optionally an animated GIF and individual frame PNGs. Can remove a green-screen/solid background for free, or any background with AI (Pro). Files are processed on this computer and written next to the input unless output_dir is given.',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: {
         input: z.string().describe('Path to the video file (mp4, mov, webm, gif, …).'),
         output_dir: z.string().optional().describe('Folder for the results. Default: "<video name>-sprites" next to the video.'),
@@ -63,6 +67,7 @@ server.registerTool('convert_video', {
 server.registerTool('make_gif', {
     title: 'Make an animated GIF',
     description: 'Make an animated GIF with a transparent background, either from a video or from an existing sprite sheet (give atlas, or columns and rows). GIF transparency is all-or-nothing, so soft edges are snapped at 50%.',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: {
         input: z.string().describe('Path to a video, or to a sprite sheet image.'),
         atlas: z.string().optional().describe('For a sprite sheet: path to its JSON atlas (TexturePacker hash or array).'),
@@ -85,6 +90,7 @@ server.registerTool('make_gif', {
 server.registerTool('slice_spritesheet', {
     title: 'Cut a sprite sheet into frames',
     description: 'Cut an existing sprite sheet into individual PNG frames, using its JSON atlas or a grid of columns × rows. Empty cells are skipped.',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     inputSchema: {
         input: z.string().describe('Path to the sprite sheet image.'),
         atlas: z.string().optional().describe('Path to the JSON atlas, if there is one.'),
@@ -102,6 +108,7 @@ server.registerTool('slice_spritesheet', {
 server.registerTool('remove_background', {
     title: 'AI background removal (Pro)',
     description: 'PRO: cut the subject out of one or more images with AI, no green screen needed, saving "<name>-cutout.png" with a transparent background. Runs on this computer; the first use downloads the AI engine and model (about 70 MB, once).',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: {
         inputs: z.array(z.string()).min(1).describe('Paths to images (png, jpg, webp).'),
         edges: z.enum(['soft', 'normal', 'crisp']).optional().describe('soft for fur/hair, crisp for cartoons and pixel art. Default normal.'),
@@ -115,6 +122,7 @@ server.registerTool('remove_background', {
 server.registerTool('activate_pro', {
     title: 'Activate Pro',
     description: `Unlock Golden Paw Animation Pro on this computer with the licence key from the purchase email (Pro is ${pro.PRO.price} one-off: AI background removal on the website, desktop app and this plugin). Call with no key to check the current status, or deactivate: true to free this computer's activation.`,
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     inputSchema: {
         licence_key: z.string().optional(),
         deactivate: z.boolean().optional()

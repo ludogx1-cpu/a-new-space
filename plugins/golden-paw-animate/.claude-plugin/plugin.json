@@ -1,0 +1,29 @@
+{
+  "name": "golden-paw-animate",
+  "displayName": "Golden Paw Animate",
+  "version": "1.0.1",
+  "description": "Turn video into game sprite sheets, JSON atlases and transparent GIFs, with free green-screen removal and AI background removal (Pro). Runs on your own computer: your videos are never uploaded.",
+  "author": {
+    "name": "Golden Paw Studios",
+    "url": "https://goldenpaw.dog/studios/",
+    "email": "goldenpaw.dogeadmin@gmail.com"
+  },
+  "homepage": "https://goldenpaw.dog/studios/animation/ai-plugin.html",
+  "repository": "https://github.com/ludogx1-cpu/a-new-space",
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": [
+    "sprite-sheet",
+    "gif",
+    "green-screen",
+    "background-removal",
+    "game-dev",
+    "animation"
+  ],
+  "network": {
+    "hosts": [
+      "registry.npmjs.org",
+      "goldenpaw.dog",
+      "api.polar.sh"
+    ]
+  }
+}

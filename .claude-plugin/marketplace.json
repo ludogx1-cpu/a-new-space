@@ -1,13 +1,18 @@
 {
   "name": "golden-paw",
-  "owner": { "name": "Golden Paw Studios", "url": "https://goldenpaw.dog/studios/" },
-  "metadata": { "description": "Plugins from Golden Paw Studios." },
+  "owner": {
+    "name": "Golden Paw Studios",
+    "url": "https://goldenpaw.dog/studios/"
+  },
+  "metadata": {
+    "description": "Plugins from Golden Paw Studios."
+  },
   "plugins": [
     {
       "name": "golden-paw-animate",
-      "source": "./mcp",
+      "source": "./plugins/golden-paw-animate",
       "description": "Golden Paw Animation Creation Tool: video to sprite sheet, JSON atlas and transparent GIF, with green-screen and AI background removal.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "category": "design",
       "homepage": "https://goldenpaw.dog/studios/animation/ai-plugin.html"
     }
