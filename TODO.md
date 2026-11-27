@@ -58,7 +58,8 @@ Live now: **https://goldenpaw.dog/studios/animation/** (the Animation Creation T
 ## 7. AI plugin (Claude / MCP)
 - [x] **Claude:** built and tested the plugin (`mcp/`): video → sprite sheet / JSON / GIF / frames, slice sheets, free green-screen removal, Pro AI background removal, Pro licence activation. Installs in Claude Code from this repo. Install page: /studios/animation/ai-plugin.html.
 - [ ] **You:** merge the AI plugin pull request. Claude then copies the new install page to goldenpaw.dog.
-- [ ] **You:** create a free npmjs.com account, make an access token (Access Tokens → Generate New Token → Granular, read and write), and add it to this repo as the secret `NPM_TOKEN` (Settings → Secrets and variables → Actions). Then Actions → *AI plugin (MCP)* → Run workflow, tick **publish**. This makes the Claude Desktop instructions (`npx golden-paw-animate-mcp`) work.
+- [x] **You + Claude:** published `golden-paw-animate-mcp` 1.0.0 to npm (Claude Desktop instructions now work).
+- [ ] **You:** on npmjs.com, set up **Trusted Publisher** for the package (GitHub Actions: ludogx1-cpu / a-new-space / mcp.yml), then delete the `NPM_TOKEN` secret and the npm token.
 - [x] **Claude:** the AI plugin uses the same Polar licence check as the website.
 - [ ] **You (later):** submit to Anthropic's plugin/connector directory and other MCP directories once it has a few users. Claude can prepare the listing text.
 - [ ] **You:** decide the licence. The plugin currently says "free to use, all rights reserved" (`mcp/LICENSE`); say if you'd prefer open source (e.g. MIT).

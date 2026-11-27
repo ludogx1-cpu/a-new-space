@@ -2,8 +2,9 @@ name: AI plugin (MCP)
 
 # Tests the Golden Paw Animate MCP plugin on every change to mcp/, and publishes it
 # to npm when run by hand ("Run workflow" with publish ticked) on main.
-# Publishing needs a repository secret NPM_TOKEN (npmjs.com → Access Tokens →
-# Generate New Token → Granular, with read and write access to packages).
+# Publishing uses npm trusted publishing (no token): on npmjs.com, the package's
+# Settings → Trusted Publisher → GitHub Actions is set to ludogx1-cpu / a-new-space /
+# mcp.yml. Raise "version" in mcp/package.json before each publish.
 on:
   push:
     branches: [main]
@@ -44,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write   # npm provenance: shows the package was built from this repo
+      id-token: write   # trusted publishing (no token) and provenance
     defaults:
       run:
         working-directory: mcp
@@ -54,12 +55,7 @@ jobs:
         with:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
-      - name: Check the NPM_TOKEN secret is set
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          if [ -z "$NODE_AUTH_TOKEN" ]; then echo "::error::Add the NPM_TOKEN repository secret first (see the top of this workflow)."; exit 1; fi
+      # Trusted publishing needs npm 11.5.1 or newer.
+      - run: npm install -g npm@11
       - run: npm ci --no-audit --no-fund
-      - run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public
